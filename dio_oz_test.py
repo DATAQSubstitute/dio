@@ -1,8 +1,8 @@
+# Creator: Oliver Zhang
 # Python classes imported for the program
 import time
 import io
 import serial
-#!/usr/bin/python
 import sys
 import usb.core
 import serial.tools.list_ports as ports
@@ -14,8 +14,6 @@ import serial.tools.list_ports as ports
 device = usb.core.find(find_all=True)
 # loop through devices and check the hexadecimal form of each one's product id
 for cfg in device:
-  #sys.stdout.write('Decimal VendorID=' + str(cfg.idVendor) + ' & ProductID=' + str(cfg.idProduct) + '\n')
-  #sys.stdout.write('Hexadecimal VendorID=' + hex(cfg.idVendor) + ' & ProductID=' + hex(cfg.idProduct) + '\n\n')
   regPID = hex(cfg.idProduct)
 
   # find a match with the target product id
@@ -30,6 +28,7 @@ for cfg in device:
       #ser1 = serial.Serial('COM9', 38400, timeout=100)
       if com.pid == uid:
         serID = str(com.device)
+        print(serID)
 
         # record port number and assign product to it
         ser1 = serial.Serial(serID, 38400, timeout=100)
