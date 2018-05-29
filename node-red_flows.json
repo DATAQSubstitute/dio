@@ -146,6 +146,88 @@
         ]
     },
     {
+        "id": "6c1bfb84.15caa4",
+        "type": "inject",
+        "z": "bd343744.03dbb8",
+        "name": "Enable DO",
+        "topic": "",
+        "payload": "endo 1",
+        "payloadType": "str",
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "x": 290,
+        "y": 440,
+        "wires": [
+            [
+                "a42844ba.9579c8"
+            ]
+        ]
+    },
+    {
+        "id": "a42844ba.9579c8",
+        "type": "function",
+        "z": "bd343744.03dbb8",
+        "name": "Set Def Out",
+        "func": "msg.payload += \"\\r\";\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 470,
+        "y": 440,
+        "wires": [
+            [
+                "7c429974.57bb48"
+            ]
+        ]
+    },
+    {
+        "id": "d3079420.b31da8",
+        "type": "inject",
+        "z": "bd343744.03dbb8",
+        "name": "Incite",
+        "topic": "",
+        "payload": "",
+        "payloadType": "str",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": "0.5",
+        "x": 270,
+        "y": 360,
+        "wires": [
+            [
+                "3b4c54bb.29650c"
+            ]
+        ]
+    },
+    {
+        "id": "3b4c54bb.29650c",
+        "type": "function",
+        "z": "bd343744.03dbb8",
+        "name": "Def Out",
+        "func": "// initialise the counter to 0 if it doesn't exist already\nvar count = context.get('count')||0;\ncount += 1;\n\nif (count == 1)\n    msg.payload = \"dout 0\\r\";\n\nelse if (count == 2) {\n    msg.payload = \"dout 1\\r\";\n    count = 0;\n}\n\n// store the value back\ncontext.set('count',count);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 480,
+        "y": 360,
+        "wires": [
+            [
+                "7c429974.57bb48"
+            ]
+        ]
+    },
+    {
+        "id": "7c429974.57bb48",
+        "type": "serial out",
+        "z": "bd343744.03dbb8",
+        "name": "/dev/ttyACM0",
+        "serial": "3a54fb29.c9dba4",
+        "x": 680,
+        "y": 400,
+        "wires": []
+    },
+    {
         "id": "3a54fb29.c9dba4",
         "type": "serial-port",
         "z": "",
