@@ -1,0 +1,162 @@
+[
+    {
+        "id": "40e14d86.747fc4",
+        "type": "serial in",
+        "z": "bd343744.03dbb8",
+        "name": "",
+        "serial": "3a54fb29.c9dba4",
+        "x": 290,
+        "y": 280,
+        "wires": [
+            [
+                "b88fde18.f0b8c"
+            ]
+        ]
+    },
+    {
+        "id": "8f21d8d0.692228",
+        "type": "serial out",
+        "z": "bd343744.03dbb8",
+        "name": "",
+        "serial": "3a54fb29.c9dba4",
+        "x": 680,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "29fa69c1.fdb5e6",
+        "type": "inject",
+        "z": "bd343744.03dbb8",
+        "name": "",
+        "topic": "info 0",
+        "payload": "info 0",
+        "payloadType": "str",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": "",
+        "x": 290,
+        "y": 160,
+        "wires": [
+            [
+                "d2860c6a.fc5de"
+            ]
+        ]
+    },
+    {
+        "id": "d2860c6a.fc5de",
+        "type": "function",
+        "z": "bd343744.03dbb8",
+        "name": "add CR",
+        "func": "msg.payload += '\\r';\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 460,
+        "y": 160,
+        "wires": [
+            [
+                "8f21d8d0.692228"
+            ]
+        ]
+    },
+    {
+        "id": "b88fde18.f0b8c",
+        "type": "debug",
+        "z": "bd343744.03dbb8",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "x": 470,
+        "y": 280,
+        "wires": []
+    },
+    {
+        "id": "e4797ff5.5d702",
+        "type": "inject",
+        "z": "bd343744.03dbb8",
+        "name": "2 sec timer",
+        "topic": "",
+        "payload": "",
+        "payloadType": "num",
+        "repeat": "2",
+        "crontab": "",
+        "once": false,
+        "onceDelay": "",
+        "x": 290,
+        "y": 220,
+        "wires": [
+            [
+                "4295c25f.82915c"
+            ]
+        ]
+    },
+    {
+        "id": "4295c25f.82915c",
+        "type": "function",
+        "z": "bd343744.03dbb8",
+        "name": "LED Switch",
+        "func": "// initialise the counter to 0 if it doesn't exist already\nvar count = context.get('count')||0;\ncount += 1;\nswitch (count) {\n    case 1:\n        msg.payload = \"led 1\\r\";\n        break;\n    case 2:\n        msg.payload = \"led 2\\r\";\n        break;\n    case 3:\n        msg.payload = \"led 3\\r\";\n        break;\n    case 4:\n        msg.payload = \"led 4\\r\";\n        break;\n    case 5:\n        msg.payload = \"led 5\\r\";\n        break;\n    case 6:\n        msg.payload = \"led 6\\r\";\n        break;\n    case 7:\n        msg.payload = \"led 7\\r\";\n        count = 0;\n        break;\n}\n// store the value back\ncontext.set('count',count);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 470,
+        "y": 220,
+        "wires": [
+            [
+                "8f21d8d0.692228"
+            ]
+        ]
+    },
+    {
+        "id": "4a407c2.dd36b84",
+        "type": "inject",
+        "z": "bd343744.03dbb8",
+        "name": "",
+        "topic": "info 0",
+        "payload": "info 0",
+        "payloadType": "str",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "x": 290,
+        "y": 100,
+        "wires": [
+            [
+                "7423f3a.9a65d0c"
+            ]
+        ]
+    },
+    {
+        "id": "7423f3a.9a65d0c",
+        "type": "function",
+        "z": "bd343744.03dbb8",
+        "name": "add CR 2",
+        "func": "msg.payload += \"\\r\";\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 460,
+        "y": 100,
+        "wires": [
+            [
+                "8f21d8d0.692228"
+            ]
+        ]
+    },
+    {
+        "id": "3a54fb29.c9dba4",
+        "type": "serial-port",
+        "z": "",
+        "serialport": "/dev/ttyACM0",
+        "serialbaud": "57600",
+        "databits": "8",
+        "parity": "none",
+        "stopbits": "1",
+        "newline": "10",
+        "bin": "false",
+        "out": "time",
+        "addchar": false
+    }
+]
