@@ -6,7 +6,7 @@
         "name": "",
         "serial": "3a54fb29.c9dba4",
         "x": 290,
-        "y": 280,
+        "y": 400,
         "wires": [
             [
                 "b88fde18.f0b8c"
@@ -70,7 +70,7 @@
         "tostatus": false,
         "complete": "payload",
         "x": 470,
-        "y": 280,
+        "y": 400,
         "wires": []
     },
     {
@@ -158,7 +158,7 @@
         "once": true,
         "onceDelay": 0.1,
         "x": 290,
-        "y": 440,
+        "y": 340,
         "wires": [
             [
                 "a42844ba.9579c8"
@@ -174,10 +174,10 @@
         "outputs": 1,
         "noerr": 0,
         "x": 470,
-        "y": 440,
+        "y": 340,
         "wires": [
             [
-                "7c429974.57bb48"
+                "8f21d8d0.692228"
             ]
         ]
     },
@@ -194,7 +194,7 @@
         "once": false,
         "onceDelay": "0.5",
         "x": 270,
-        "y": 360,
+        "y": 280,
         "wires": [
             [
                 "3b4c54bb.29650c"
@@ -210,22 +210,12 @@
         "outputs": 1,
         "noerr": 0,
         "x": 480,
-        "y": 360,
+        "y": 280,
         "wires": [
             [
-                "7c429974.57bb48"
+                "8f21d8d0.692228"
             ]
         ]
-    },
-    {
-        "id": "7c429974.57bb48",
-        "type": "serial out",
-        "z": "bd343744.03dbb8",
-        "name": "/dev/ttyACM0",
-        "serial": "3a54fb29.c9dba4",
-        "x": 680,
-        "y": 400,
-        "wires": []
     },
     {
         "id": "3a54fb29.c9dba4",
