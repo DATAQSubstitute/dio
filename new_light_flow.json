@@ -37,7 +37,8 @@
         "y": 260,
         "wires": [
             [
-                "e1a35612.8d43a8"
+                "e1a35612.8d43a8",
+                "7319e48c.fdfc7c"
             ]
         ]
     },
@@ -53,7 +54,8 @@
         "y": 180,
         "wires": [
             [
-                "e1a35612.8d43a8"
+                "e1a35612.8d43a8",
+                "7319e48c.fdfc7c"
             ]
         ]
     },
@@ -234,6 +236,38 @@
         "wires": []
     },
     {
+        "id": "4af9b921.f2d2f8",
+        "type": "ui_text",
+        "z": "cf7bb1a.c5f755",
+        "group": "d0b3b567.3c30c8",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Status",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "x": 930,
+        "y": 300,
+        "wires": []
+    },
+    {
+        "id": "7319e48c.fdfc7c",
+        "type": "function",
+        "z": "cf7bb1a.c5f755",
+        "name": "Status Trigger",
+        "func": "if (msg.payload == \"dout 0\\r\")\n    msg.payload = \"On\";\nelse if (msg.payload == \"dout 1\\r\")\n    msg.payload = \"Off\";\nelse\n    msg.payload = \"Off\";\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 760,
+        "y": 300,
+        "wires": [
+            [
+                "4af9b921.f2d2f8"
+            ]
+        ]
+    },
+    {
         "id": "3a54fb29.c9dba4",
         "type": "serial-port",
         "z": "",
@@ -259,7 +293,7 @@
         "id": "d0b3b567.3c30c8",
         "type": "ui_group",
         "z": "",
-        "name": "Analog",
+        "name": "LD Switch",
         "tab": "a4013ac1.194cc8",
         "order": 1,
         "disp": true,
@@ -270,7 +304,7 @@
         "id": "5d64ad1b.8bfe94",
         "type": "ui_group",
         "z": "",
-        "name": "Discrete",
+        "name": "LD Response",
         "tab": "a4013ac1.194cc8",
         "disp": true,
         "width": "6",
