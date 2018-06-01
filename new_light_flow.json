@@ -1,0 +1,287 @@
+[
+    {
+        "id": "e1a35612.8d43a8",
+        "type": "serial out",
+        "z": "cf7bb1a.c5f755",
+        "name": "",
+        "serial": "3a54fb29.c9dba4",
+        "x": 820,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "bb21b1e2.0ec16",
+        "type": "function",
+        "z": "cf7bb1a.c5f755",
+        "name": "LED Switch",
+        "func": "// initialise the counter to 0 if it doesn't exist already\nvar count = context.get('count')||0;\ncount += 1;\nswitch (count) {\n    case 1:\n        msg.payload = \"led 1\\r\";\n        break;\n    case 2:\n        msg.payload = \"led 2\\r\";\n        break;\n    case 3:\n        msg.payload = \"led 3\\r\";\n        break;\n    case 4:\n        msg.payload = \"led 4\\r\";\n        break;\n    case 5:\n        msg.payload = \"led 5\\r\";\n        break;\n    case 6:\n        msg.payload = \"led 6\\r\";\n        break;\n    case 7:\n        msg.payload = \"led 7\\r\";\n        count = 0;\n        break;\n}\n// store the value back\ncontext.set('count',count);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 510,
+        "y": 100,
+        "wires": [
+            [
+                "e1a35612.8d43a8"
+            ]
+        ]
+    },
+    {
+        "id": "9246b2a0.3ece7",
+        "type": "function",
+        "z": "cf7bb1a.c5f755",
+        "name": "Set Def Out",
+        "func": "msg.payload += \"\\r\";\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 510,
+        "y": 260,
+        "wires": [
+            [
+                "e1a35612.8d43a8"
+            ]
+        ]
+    },
+    {
+        "id": "692c635b.51009c",
+        "type": "function",
+        "z": "cf7bb1a.c5f755",
+        "name": "Def Out",
+        "func": "// initialise the counter to 0 if it doesn't exist already\nvar count = context.get('count')||0;\ncount += 1;\n\nif (count == 1)\n    msg.payload = \"dout 0\\r\";\n\nelse if (count == 2) {\n    msg.payload = \"dout 1\\r\";\n    count = 0;\n}\n\n// store the value back\ncontext.set('count',count);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 500,
+        "y": 180,
+        "wires": [
+            [
+                "e1a35612.8d43a8"
+            ]
+        ]
+    },
+    {
+        "id": "1d81f9a3.c68be6",
+        "type": "inject",
+        "z": "cf7bb1a.c5f755",
+        "name": "2 sec timer",
+        "topic": "",
+        "payload": "",
+        "payloadType": "num",
+        "repeat": "2",
+        "crontab": "",
+        "once": false,
+        "onceDelay": "",
+        "x": 270,
+        "y": 100,
+        "wires": [
+            [
+                "bb21b1e2.0ec16"
+            ]
+        ]
+    },
+    {
+        "id": "c13ab37e.fa0b4",
+        "type": "inject",
+        "z": "cf7bb1a.c5f755",
+        "name": "Enable DO",
+        "topic": "",
+        "payload": "endo 1",
+        "payloadType": "str",
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "x": 250,
+        "y": 260,
+        "wires": [
+            [
+                "9246b2a0.3ece7"
+            ]
+        ]
+    },
+    {
+        "id": "d575c4b8.ae4c38",
+        "type": "serial in",
+        "z": "cf7bb1a.c5f755",
+        "name": "",
+        "serial": "3a54fb29.c9dba4",
+        "x": 210,
+        "y": 380,
+        "wires": [
+            [
+                "78eaf534.7bc42c"
+            ]
+        ]
+    },
+    {
+        "id": "78eaf534.7bc42c",
+        "type": "debug",
+        "z": "cf7bb1a.c5f755",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "x": 390,
+        "y": 380,
+        "wires": []
+    },
+    {
+        "id": "e9c08988.c141e8",
+        "type": "websocket in",
+        "z": "cf7bb1a.c5f755",
+        "name": "Dashboard",
+        "server": "",
+        "client": "199a87e9.c98318",
+        "x": 200,
+        "y": 540,
+        "wires": [
+            [
+                "2cee447d.ad06dc"
+            ]
+        ]
+    },
+    {
+        "id": "2cee447d.ad06dc",
+        "type": "debug",
+        "z": "cf7bb1a.c5f755",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "x": 390,
+        "y": 540,
+        "wires": []
+    },
+    {
+        "id": "fb16ce13.f567",
+        "type": "ui_button",
+        "z": "cf7bb1a.c5f755",
+        "name": "",
+        "group": "d0b3b567.3c30c8",
+        "order": 0,
+        "width": "3",
+        "height": "3",
+        "passthru": false,
+        "label": "Light Switch",
+        "color": "",
+        "bgcolor": "",
+        "icon": "",
+        "payload": "",
+        "payloadType": "str",
+        "topic": "",
+        "x": 250,
+        "y": 180,
+        "wires": [
+            [
+                "692c635b.51009c"
+            ]
+        ]
+    },
+    {
+        "id": "a28e859b.3e7f88",
+        "type": "ui_button",
+        "z": "cf7bb1a.c5f755",
+        "name": "",
+        "group": "5d64ad1b.8bfe94",
+        "order": 0,
+        "width": "3",
+        "height": "1",
+        "passthru": false,
+        "label": "Hello world!",
+        "color": "",
+        "bgcolor": "",
+        "icon": "",
+        "payload": "Hello DATA Q!",
+        "payloadType": "str",
+        "topic": "",
+        "x": 680,
+        "y": 480,
+        "wires": [
+            [
+                "26dbbbc6.0e9784",
+                "428fcad8.bc1644"
+            ]
+        ]
+    },
+    {
+        "id": "428fcad8.bc1644",
+        "type": "ui_audio",
+        "z": "cf7bb1a.c5f755",
+        "name": "",
+        "group": "5d64ad1b.8bfe94",
+        "voice": "",
+        "always": "",
+        "x": 880,
+        "y": 480,
+        "wires": []
+    },
+    {
+        "id": "26dbbbc6.0e9784",
+        "type": "ui_text",
+        "z": "cf7bb1a.c5f755",
+        "group": "5d64ad1b.8bfe94",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Output:",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "x": 900,
+        "y": 400,
+        "wires": []
+    },
+    {
+        "id": "3a54fb29.c9dba4",
+        "type": "serial-port",
+        "z": "",
+        "serialport": "/dev/ttyACM0",
+        "serialbaud": "57600",
+        "databits": "8",
+        "parity": "none",
+        "stopbits": "1",
+        "newline": "10",
+        "bin": "false",
+        "out": "time",
+        "addchar": false
+    },
+    {
+        "id": "199a87e9.c98318",
+        "type": "websocket-client",
+        "z": "",
+        "path": "http://localhost:1880/ui/#/0",
+        "tls": "",
+        "wholemsg": "false"
+    },
+    {
+        "id": "d0b3b567.3c30c8",
+        "type": "ui_group",
+        "z": "",
+        "name": "Analog",
+        "tab": "a4013ac1.194cc8",
+        "order": 1,
+        "disp": true,
+        "width": "6",
+        "collapse": false
+    },
+    {
+        "id": "5d64ad1b.8bfe94",
+        "type": "ui_group",
+        "z": "",
+        "name": "Discrete",
+        "tab": "a4013ac1.194cc8",
+        "disp": true,
+        "width": "6",
+        "collapse": false
+    },
+    {
+        "id": "a4013ac1.194cc8",
+        "type": "ui_tab",
+        "z": "",
+        "name": "DATAQ",
+        "icon": "dashboard",
+        "order": 1
+    }
+]
