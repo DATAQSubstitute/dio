@@ -1,0 +1,550 @@
+[
+    {
+        "id": "d56f5f48.f339f",
+        "type": "serial out",
+        "z": "4a9a086a.b565f8",
+        "name": "",
+        "serial": "b9220e4.fb37df",
+        "x": 640,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "55196ca1.85d6f4",
+        "type": "function",
+        "z": "4a9a086a.b565f8",
+        "name": "LED Switch",
+        "func": "// initialise the counter to 0 if it doesn't exist already\n//var count = context.get('count')||0;\n//count += 1;\n// Now randomize the LED parameter chosen from 1 to 7\nvar count = Math.random() * 7;\ncount = Math.round(count);\n\nswitch (count) {\n    case 1:\n        msg.payload = \"led 1\\r\";\n        break;\n    case 2:\n        msg.payload = \"led 2\\r\";\n        break;\n    case 3:\n        msg.payload = \"led 3\\r\";\n        break;\n    case 4:\n        msg.payload = \"led 4\\r\";\n        break;\n    case 5:\n        msg.payload = \"led 5\\r\";\n        break;\n    case 6:\n        msg.payload = \"led 6\\r\";\n        break;\n    case 7:\n        msg.payload = \"led 7\\r\";\n        count = 0;\n        break;\n}\n// store the value back\n// context.set('count',count);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 350,
+        "y": 40,
+        "wires": [
+            [
+                "d56f5f48.f339f",
+                "a707e7b2.7e5be8"
+            ]
+        ]
+    },
+    {
+        "id": "404875c1.7e7bec",
+        "type": "function",
+        "z": "4a9a086a.b565f8",
+        "name": "Set Def Out",
+        "func": "msg.payload += \"\\r\";\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 350,
+        "y": 240,
+        "wires": [
+            [
+                "d56f5f48.f339f",
+                "97c2b14b.fc64e"
+            ]
+        ]
+    },
+    {
+        "id": "74a2150c.4d337c",
+        "type": "function",
+        "z": "4a9a086a.b565f8",
+        "name": "Def Out",
+        "func": "// initialise the counter to 0 if it doesn't exist already\nvar count = context.get('count')||0;\ncount += 1;\n\nif (count == 1)\n    msg.payload = \"dout 0\\r\";\n\nelse if (count == 2) {\n    msg.payload = \"dout 1\\r\";\n    count = 0;\n}\n\n// store the value back\ncontext.set('count',count);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 340,
+        "y": 180,
+        "wires": [
+            [
+                "d56f5f48.f339f",
+                "97c2b14b.fc64e"
+            ]
+        ]
+    },
+    {
+        "id": "9a2a231.904f5e",
+        "type": "inject",
+        "z": "4a9a086a.b565f8",
+        "name": "2 sec timer",
+        "topic": "",
+        "payload": "",
+        "payloadType": "num",
+        "repeat": "2",
+        "crontab": "",
+        "once": false,
+        "onceDelay": "",
+        "x": 130,
+        "y": 40,
+        "wires": [
+            [
+                "55196ca1.85d6f4"
+            ]
+        ]
+    },
+    {
+        "id": "1d9afaa1.91d4c5",
+        "type": "inject",
+        "z": "4a9a086a.b565f8",
+        "name": "Enable DO",
+        "topic": "",
+        "payload": "endo 1",
+        "payloadType": "str",
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "x": 130,
+        "y": 240,
+        "wires": [
+            [
+                "404875c1.7e7bec"
+            ]
+        ]
+    },
+    {
+        "id": "e2f09c65.cf755",
+        "type": "serial in",
+        "z": "4a9a086a.b565f8",
+        "name": "",
+        "serial": "b9220e4.fb37df",
+        "x": 130,
+        "y": 300,
+        "wires": [
+            [
+                "54dd30e3.25b66"
+            ]
+        ]
+    },
+    {
+        "id": "54dd30e3.25b66",
+        "type": "debug",
+        "z": "4a9a086a.b565f8",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "x": 330,
+        "y": 300,
+        "wires": []
+    },
+    {
+        "id": "541bb749.ef4188",
+        "type": "websocket in",
+        "z": "4a9a086a.b565f8",
+        "name": "Dashboard",
+        "server": "",
+        "client": "76cf5626.402238",
+        "x": 120,
+        "y": 360,
+        "wires": [
+            [
+                "8d638917.36d8b8"
+            ]
+        ]
+    },
+    {
+        "id": "8d638917.36d8b8",
+        "type": "debug",
+        "z": "4a9a086a.b565f8",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "x": 310,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "81c7db6a.12a728",
+        "type": "ui_button",
+        "z": "4a9a086a.b565f8",
+        "name": "",
+        "group": "fa941cdf.6b437",
+        "order": 0,
+        "width": "3",
+        "height": "3",
+        "passthru": false,
+        "label": "Light Switch",
+        "color": "",
+        "bgcolor": "",
+        "icon": "",
+        "payload": "",
+        "payloadType": "str",
+        "topic": "",
+        "x": 130,
+        "y": 180,
+        "wires": [
+            [
+                "74a2150c.4d337c"
+            ]
+        ]
+    },
+    {
+        "id": "1d356ba6.e12264",
+        "type": "ui_button",
+        "z": "4a9a086a.b565f8",
+        "name": "",
+        "group": "dcf9ed2e.00b1b",
+        "order": 0,
+        "width": "3",
+        "height": "1",
+        "passthru": false,
+        "label": "Hello!",
+        "color": "",
+        "bgcolor": "",
+        "icon": "",
+        "payload": "Hello everyone! My name is Jessica Rabbit.",
+        "payloadType": "str",
+        "topic": "",
+        "x": 530,
+        "y": 320,
+        "wires": [
+            [
+                "f5d424ab.748118",
+                "7b3a6fb8.011"
+            ]
+        ]
+    },
+    {
+        "id": "7b3a6fb8.011",
+        "type": "ui_audio",
+        "z": "4a9a086a.b565f8",
+        "name": "",
+        "group": "dcf9ed2e.00b1b",
+        "voice": "",
+        "always": "",
+        "x": 700,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "f5d424ab.748118",
+        "type": "ui_text",
+        "z": "4a9a086a.b565f8",
+        "group": "dcf9ed2e.00b1b",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Output:",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "x": 700,
+        "y": 300,
+        "wires": []
+    },
+    {
+        "id": "e29cbf4f.bbffb",
+        "type": "ui_text",
+        "z": "4a9a086a.b565f8",
+        "group": "fa941cdf.6b437",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Status",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "x": 850,
+        "y": 240,
+        "wires": []
+    },
+    {
+        "id": "97c2b14b.fc64e",
+        "type": "function",
+        "z": "4a9a086a.b565f8",
+        "name": "Status Trigger",
+        "func": "if (msg.payload == \"dout 0\\r\")\n    msg.payload = \"On\";\nelse if (msg.payload == \"dout 1\\r\")\n    msg.payload = \"Off\";\nelse\n    msg.payload = \"Off\";\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 640,
+        "y": 240,
+        "wires": [
+            [
+                "e29cbf4f.bbffb"
+            ]
+        ]
+    },
+    {
+        "id": "5aafa2ce.b5901c",
+        "type": "ui_button",
+        "z": "4a9a086a.b565f8",
+        "name": "",
+        "group": "c8e1b897.b9b728",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "Test multiple hellos",
+        "color": "",
+        "bgcolor": "",
+        "icon": "",
+        "payload": "",
+        "payloadType": "str",
+        "topic": "",
+        "x": 150,
+        "y": 440,
+        "wires": [
+            [
+                "42f7390a.e35fd8"
+            ]
+        ]
+    },
+    {
+        "id": "42f7390a.e35fd8",
+        "type": "function",
+        "z": "4a9a086a.b565f8",
+        "name": "Multi-speaker",
+        "func": "var language = context.get('language') || 0;\nlanguage += 1;\nswitch(language) {\n    case 1:\n        msg.payload = \"Hello\";\n        break;\n    case 2:\n        msg.payload = \"Bonjour\";\n        break;\n    case 3:\n        msg.payload = \"Hola\";\n        break;\n    case 4:\n        msg.payload = \"Konnichiwa\";\n        language = 0;\n        break;\n}\ncontext.set('language', language);\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 400,
+        "y": 440,
+        "wires": [
+            [
+                "1b0dc4a7.4fb2fb"
+            ]
+        ]
+    },
+    {
+        "id": "1b0dc4a7.4fb2fb",
+        "type": "ui_audio",
+        "z": "4a9a086a.b565f8",
+        "name": "",
+        "group": "c8e1b897.b9b728",
+        "voice": "ja-JP",
+        "always": "",
+        "x": 600,
+        "y": 440,
+        "wires": []
+    },
+    {
+        "id": "a707e7b2.7e5be8",
+        "type": "function",
+        "z": "4a9a086a.b565f8",
+        "name": "Example text case",
+        "func": "var LED = msg.payload;\nswitch (LED) {\n    case \"led 1\\r\":\n        msg.payload = \"blue\";\n        break;\n        \n    case \"led 2\\r\":\n        msg.payload = \"green\";\n        break;\n        \n    case \"led 3\\r\":\n        msg.payload = \"cyan\";\n        msg.topic = 'C'\n        break;\n        \n    case \"led 4\\r\":\n        msg.payload = \"red\";\n        break;\n        \n    case \"led 5\\r\":\n        msg.payload = \"magenta\";\n        break;\n        \n    case \"led 6\\r\":\n        msg.payload = \"yellow\";\n        break;\n        \n    case \"led 7\\r\":\n        msg.payload = \"white\";\n        break;\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 650,
+        "y": 40,
+        "wires": [
+            [
+                "4ab5814e.af7bd",
+                "3b97d14.e67532e"
+            ]
+        ]
+    },
+    {
+        "id": "4ab5814e.af7bd",
+        "type": "ui_text",
+        "z": "4a9a086a.b565f8",
+        "group": "c8e1b897.b9b728",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Current Color LED",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "x": 1010,
+        "y": 40,
+        "wires": []
+    },
+    {
+        "id": "8eb8871f.66c9a8",
+        "type": "ui_date_picker",
+        "z": "4a9a086a.b565f8",
+        "name": "",
+        "label": "Date",
+        "group": "c8e1b897.b9b728",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "topic": "",
+        "x": 250,
+        "y": 560,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "70cea846.ada118",
+        "type": "ui_chart",
+        "z": "4a9a086a.b565f8",
+        "name": "",
+        "group": "c8e1b897.b9b728",
+        "order": 0,
+        "width": "5",
+        "height": "5",
+        "label": "Colors",
+        "chartType": "bar",
+        "legend": "false",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "0",
+        "ymax": "100",
+        "removeOlder": 1,
+        "removeOlderPoints": "",
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "useOldStyle": false,
+        "x": 1210,
+        "y": 120,
+        "wires": [
+            [],
+            []
+        ]
+    },
+    {
+        "id": "3b97d14.e67532e",
+        "type": "function",
+        "z": "4a9a086a.b565f8",
+        "name": "Chart Record",
+        "func": "var add = msg.payload;\nvar b, g, c, r, m, y, w;\nb = context.get('blue') || 0;\ng = context.get('green') || 0;\nc = context.get('cyan') || 0;\nr = context.get('red') || 0;\nm = context.get('magenta') || 0;\ny = context.get('yellow') || 0;\nw = context.get('white') || 0;\n\nif (add == \"reset\") {\n    b = 0; g = 0; c = 0;\n    r = 0; m = 0; y = 0;\n    w = 0;\n}\n\nvar chart = [b, g, c, r, m, y, w];\n\nswitch (add) {\n    case \"blue\":\n        chart[0] += 1;\n        break;\n        \n    case \"green\":\n        chart[1] += 1;\n        break;\n        \n    case \"cyan\":\n        chart[2] += 1;\n        break;\n        \n    case \"red\":\n        chart[3] += 1;\n        break;\n        \n    case \"magenta\":\n        chart[4] += 1;\n        break;\n        \n    case \"yellow\":\n        chart[5] += 1;\n        break;\n        \n    case \"white\":\n        chart[6] += 1;\n        break;\n}\nb = chart[0]; g = chart[1]; c = chart[2];\nr = chart[3]; m = chart[4]; y = chart[5];\nw = chart[6];\n\ncontext.set('blue', b);\ncontext.set('green', g);\ncontext.set('cyan', c);\ncontext.set('red', r);\ncontext.set('magenta', m);\ncontext.set('yellow', y);\ncontext.set('white', w);\n\nmsg.payload = [{\"series\":[\"B\",\"G\",\"C\",\"R\",\"M\",\"Y\",\"W\"],\n                \"data\":[[b,g,c,r,m,y,w]],\n                \"labels\":[\"B\",\"G\",\"C\",\"R\",\"M\",\"Y\",\"W\"]}];\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 1000,
+        "y": 120,
+        "wires": [
+            [
+                "70cea846.ada118"
+            ]
+        ]
+    },
+    {
+        "id": "76619dc0.6b76d4",
+        "type": "e-mail",
+        "z": "4a9a086a.b565f8",
+        "server": "smtp.gmail.com",
+        "port": "465",
+        "secure": true,
+        "name": "oliverzhang2011@yahoo.com",
+        "dname": "",
+        "x": 880,
+        "y": 560,
+        "wires": []
+    },
+    {
+        "id": "47e08255.9b451c",
+        "type": "ui_text_input",
+        "z": "4a9a086a.b565f8",
+        "name": "",
+        "label": "Personal E-Mail",
+        "group": "dcf9ed2e.00b1b",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "mode": "text",
+        "delay": 300,
+        "topic": "",
+        "x": 540,
+        "y": 560,
+        "wires": [
+            [
+                "76619dc0.6b76d4"
+            ]
+        ]
+    },
+    {
+        "id": "7ad5c7dd.b22f28",
+        "type": "inject",
+        "z": "4a9a086a.b565f8",
+        "name": "Reset Chart",
+        "topic": "",
+        "payload": "reset",
+        "payloadType": "str",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "x": 730,
+        "y": 120,
+        "wires": [
+            [
+                "3b97d14.e67532e"
+            ]
+        ]
+    },
+    {
+        "id": "b9220e4.fb37df",
+        "type": "serial-port",
+        "z": "",
+        "serialport": "/dev/ttyACM0",
+        "serialbaud": "57600",
+        "databits": "8",
+        "parity": "none",
+        "stopbits": "1",
+        "newline": "10",
+        "bin": "false",
+        "out": "time",
+        "addchar": false
+    },
+    {
+        "id": "76cf5626.402238",
+        "type": "websocket-client",
+        "z": "",
+        "path": "http://localhost:1880/ui/#/0",
+        "tls": "",
+        "wholemsg": "false"
+    },
+    {
+        "id": "fa941cdf.6b437",
+        "type": "ui_group",
+        "z": "",
+        "name": "LD Switch",
+        "tab": "d1b5c3d4.757b4",
+        "order": 1,
+        "disp": true,
+        "width": "6",
+        "collapse": false
+    },
+    {
+        "id": "dcf9ed2e.00b1b",
+        "type": "ui_group",
+        "z": "",
+        "name": "LD Response",
+        "tab": "d1b5c3d4.757b4",
+        "disp": true,
+        "width": "6",
+        "collapse": false
+    },
+    {
+        "id": "c8e1b897.b9b728",
+        "type": "ui_group",
+        "z": "",
+        "name": "LD Extra (TBD)",
+        "tab": "d1b5c3d4.757b4",
+        "order": 3,
+        "disp": true,
+        "width": "6",
+        "collapse": false
+    },
+    {
+        "id": "d1b5c3d4.757b4",
+        "type": "ui_tab",
+        "z": "",
+        "name": "DATAQ",
+        "icon": "dashboard",
+        "order": 1
+    }
+]
