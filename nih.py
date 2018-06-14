@@ -6,6 +6,9 @@ import serial
 import sys
 import usb.core
 import serial.tools.list_ports as ports
+import psutil
+import os
+import keyboard
 
 # Decimal VendorID=1667 & ProductID=4369
 # Hexadecimal VendorID=0x683 & ProductID=0x1111
@@ -40,7 +43,7 @@ i = 0
 ser1.write(b"ps 6\r")
 print(ser1.readline())
 
-ser1.write(b"dec 20\r")
+ser1.write(b"dec 15\r")
 print(ser1.readline())
 
 ser1.write(b"srate 3000\r") #   20000 samples / sec
@@ -70,9 +73,6 @@ print(ser1.readline())
 ser1.write(b"slist 7 7\r")
 print(ser1.readline())
 
-ser1.write(b"slist 8 8\r")
-print(ser1.readline())
-
 ser1.write(b"start\r")
 
 j = 0
@@ -80,22 +80,21 @@ i = 0
 k = 0
 m_bytes = []
 #m_bytes.append(1)
-with open("recdaq.txt", "wb") as fh:
+with open("recdaq.bin", "wb") as fh:
 # configure and send commands to the product
   while True:
 
     i = ser1.inWaiting()
-    if i > 0:
+    if i > 256:
       #print('.', end='', flush=True)
       #com = ser1.read()
       #m_bytes[k] = com
-      m_bytes.append(ser1.read())
-      k=k+1
-      #fh.write(m_bytes[k])
+      #m_bytes=ser1.read()
+      #k=k+1
+      fh.write(ser1.read(256))
       j=j+1
-      if j > 1000000:
-        fh.write(m_bytes)
-
-        ser1.write(b"stop\r")
-        break
-fh.close()
+    if keyboard.is_pressed('s'):    #if key 's' is pressed 
+      keyboard.release('s')
+      ser1.write(b"stop\r")
+      fh.close()
+      break
