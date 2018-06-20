@@ -1,0 +1,74 @@
+[
+    {
+        "id": "befd1f7b.2105d",
+        "type": "exec",
+        "z": "14d701a3.67e56e",
+        "command": "sudo python",
+        "addpay": true,
+        "append": "",
+        "useSpawn": "true",
+        "timer": "",
+        "oldrc": false,
+        "name": "",
+        "x": 330,
+        "y": 260,
+        "wires": [
+            [
+                "23a630c3.72fa"
+            ],
+            [],
+            [
+                "23a630c3.72fa"
+            ]
+        ]
+    },
+    {
+        "id": "f5e7f4dc.da9818",
+        "type": "inject",
+        "z": "14d701a3.67e56e",
+        "name": "Run Python",
+        "topic": "",
+        "payload": "/home/pi/nih_john.py",
+        "payloadType": "str",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "x": 110,
+        "y": 260,
+        "wires": [
+            [
+                "befd1f7b.2105d"
+            ]
+        ]
+    },
+    {
+        "id": "23a630c3.72fa",
+        "type": "debug",
+        "z": "14d701a3.67e56e",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": true,
+        "tostatus": false,
+        "complete": "payload",
+        "x": 560,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "9c89f859.af3668",
+        "type": "catch",
+        "z": "14d701a3.67e56e",
+        "name": "",
+        "scope": [
+            "23a630c3.72fa",
+            "befd1f7b.2105d"
+        ],
+        "x": 90,
+        "y": 360,
+        "wires": [
+            []
+        ]
+    }
+]
