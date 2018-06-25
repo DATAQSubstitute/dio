@@ -1,0 +1,363 @@
+[
+    {
+        "id": "d33fce24.2fa1e",
+        "type": "inject",
+        "z": "14d701a3.67e56e",
+        "name": "",
+        "topic": "",
+        "payload": "start",
+        "payloadType": "str",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "x": 130,
+        "y": 120,
+        "wires": [
+            [
+                "b86e67f1.d9f6f8"
+            ]
+        ]
+    },
+    {
+        "id": "69702e19.b6d3d",
+        "type": "inject",
+        "z": "14d701a3.67e56e",
+        "name": "",
+        "topic": "",
+        "payload": "slist 0 0",
+        "payloadType": "str",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "x": 130,
+        "y": 280,
+        "wires": [
+            [
+                "b86e67f1.d9f6f8"
+            ]
+        ]
+    },
+    {
+        "id": "ea2f80c5.2d2a3",
+        "type": "inject",
+        "z": "14d701a3.67e56e",
+        "name": "",
+        "topic": "",
+        "payload": "ms 10",
+        "payloadType": "str",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "x": 130,
+        "y": 320,
+        "wires": [
+            [
+                "b86e67f1.d9f6f8"
+            ]
+        ]
+    },
+    {
+        "id": "20ce2310.4c266c",
+        "type": "inject",
+        "z": "14d701a3.67e56e",
+        "name": "",
+        "topic": "",
+        "payload": "encode 1",
+        "payloadType": "str",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "x": 140,
+        "y": 360,
+        "wires": [
+            [
+                "b86e67f1.d9f6f8"
+            ]
+        ]
+    },
+    {
+        "id": "b86e67f1.d9f6f8",
+        "type": "function",
+        "z": "14d701a3.67e56e",
+        "name": "Four Channels",
+        "func": "msg.payload += '\\r';\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 470,
+        "y": 220,
+        "wires": [
+            [
+                "d5410de0.2f266"
+            ]
+        ]
+    },
+    {
+        "id": "d5410de0.2f266",
+        "type": "serial out",
+        "z": "14d701a3.67e56e",
+        "name": "",
+        "serial": "b9220e4.fb37df",
+        "x": 720,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "aade69b2.8a3248",
+        "type": "serial in",
+        "z": "14d701a3.67e56e",
+        "name": "",
+        "serial": "b9220e4.fb37df",
+        "x": 400,
+        "y": 500,
+        "wires": [
+            [
+                "176d09f7.618cb6"
+            ]
+        ]
+    },
+    {
+        "id": "1caa4a5c.74b9a6",
+        "type": "inject",
+        "z": "14d701a3.67e56e",
+        "name": "",
+        "topic": "",
+        "payload": "stop",
+        "payloadType": "str",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "x": 130,
+        "y": 80,
+        "wires": [
+            [
+                "b86e67f1.d9f6f8"
+            ]
+        ]
+    },
+    {
+        "id": "bc594d9d.1c6d9",
+        "type": "ui_gauge",
+        "z": "14d701a3.67e56e",
+        "name": "",
+        "group": "de0f7450.093f18",
+        "order": 0,
+        "width": "5",
+        "height": "5",
+        "gtype": "gage",
+        "title": "Channel 1",
+        "label": "Volts (V)",
+        "format": "{{value}}",
+        "min": "-10",
+        "max": "10",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "x": 890,
+        "y": 440,
+        "wires": []
+    },
+    {
+        "id": "134c504d.6fb1",
+        "type": "inject",
+        "z": "14d701a3.67e56e",
+        "name": "",
+        "topic": "",
+        "payload": "slist 1 1",
+        "payloadType": "str",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "x": 130,
+        "y": 240,
+        "wires": [
+            [
+                "b86e67f1.d9f6f8"
+            ]
+        ]
+    },
+    {
+        "id": "ef36667.b6bcf98",
+        "type": "ui_gauge",
+        "z": "14d701a3.67e56e",
+        "name": "",
+        "group": "de0f7450.093f18",
+        "order": 0,
+        "width": "5",
+        "height": "5",
+        "gtype": "gage",
+        "title": "Channel 2",
+        "label": "units",
+        "format": "{{value}}",
+        "min": "-10",
+        "max": "10",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "x": 890,
+        "y": 480,
+        "wires": []
+    },
+    {
+        "id": "176d09f7.618cb6",
+        "type": "function",
+        "z": "14d701a3.67e56e",
+        "name": "Split",
+        "func": "var str = msg.payload;\n\nvar sep = str.split(\",\");\n\nvar msg1 = { payload: sep[0] };\nvar msg2 = { payload: sep[1] };\nvar msg3 = { payload: sep[2] };\nvar msg4 = { payload: sep[3] };\n\n\nreturn [msg1, msg2, msg3, msg4];",
+        "outputs": 4,
+        "noerr": 0,
+        "x": 650,
+        "y": 500,
+        "wires": [
+            [
+                "bc594d9d.1c6d9"
+            ],
+            [
+                "ef36667.b6bcf98"
+            ],
+            [
+                "6ee61531.8da99c"
+            ],
+            [
+                "4616106.c051af"
+            ]
+        ]
+    },
+    {
+        "id": "35791ff8.15c72",
+        "type": "inject",
+        "z": "14d701a3.67e56e",
+        "name": "",
+        "topic": "",
+        "payload": "slist 2 2",
+        "payloadType": "str",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "x": 130,
+        "y": 200,
+        "wires": [
+            [
+                "b86e67f1.d9f6f8"
+            ]
+        ]
+    },
+    {
+        "id": "16ad4c55.947844",
+        "type": "inject",
+        "z": "14d701a3.67e56e",
+        "name": "",
+        "topic": "",
+        "payload": "slist 3 3",
+        "payloadType": "str",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "x": 130,
+        "y": 160,
+        "wires": [
+            [
+                "b86e67f1.d9f6f8"
+            ]
+        ]
+    },
+    {
+        "id": "6ee61531.8da99c",
+        "type": "ui_gauge",
+        "z": "14d701a3.67e56e",
+        "name": "",
+        "group": "de0f7450.093f18",
+        "order": 0,
+        "width": "5",
+        "height": "5",
+        "gtype": "gage",
+        "title": "Channel 3",
+        "label": "Volts (V)",
+        "format": "{{value}}",
+        "min": "-10",
+        "max": "10",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "x": 890,
+        "y": 520,
+        "wires": []
+    },
+    {
+        "id": "4616106.c051af",
+        "type": "ui_gauge",
+        "z": "14d701a3.67e56e",
+        "name": "",
+        "group": "de0f7450.093f18",
+        "order": 0,
+        "width": "5",
+        "height": "5",
+        "gtype": "gage",
+        "title": "Channel 4",
+        "label": "Volts (V)",
+        "format": "{{value}}",
+        "min": "-10",
+        "max": "10",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "x": 890,
+        "y": 560,
+        "wires": []
+    },
+    {
+        "id": "b9220e4.fb37df",
+        "type": "serial-port",
+        "z": "",
+        "serialport": "/dev/ttyACM0",
+        "serialbaud": "57600",
+        "databits": "8",
+        "parity": "none",
+        "stopbits": "1",
+        "newline": "10",
+        "bin": "false",
+        "out": "time",
+        "addchar": false
+    },
+    {
+        "id": "de0f7450.093f18",
+        "type": "ui_group",
+        "z": "",
+        "name": "DAQ_Reader",
+        "tab": "d1b5c3d4.757b4",
+        "disp": true,
+        "width": "10",
+        "collapse": false
+    },
+    {
+        "id": "d1b5c3d4.757b4",
+        "type": "ui_tab",
+        "z": "",
+        "name": "DATAQ",
+        "icon": "dashboard",
+        "order": 1
+    }
+]
