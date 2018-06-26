@@ -1,5 +1,12 @@
 [
     {
+        "id": "14d701a3.67e56e",
+        "type": "tab",
+        "label": "NIH",
+        "disabled": false,
+        "info": ""
+    },
+    {
         "id": "d33fce24.2fa1e",
         "type": "inject",
         "z": "14d701a3.67e56e",
@@ -30,7 +37,7 @@
         "repeat": "",
         "crontab": "",
         "once": false,
-        "onceDelay": 0.1,
+        "onceDelay": "0.1",
         "x": 130,
         "y": 280,
         "wires": [
@@ -45,7 +52,7 @@
         "z": "14d701a3.67e56e",
         "name": "",
         "topic": "",
-        "payload": "ms 10",
+        "payload": "ms 1",
         "payloadType": "str",
         "repeat": "",
         "crontab": "",
@@ -111,11 +118,13 @@
         "z": "14d701a3.67e56e",
         "name": "",
         "serial": "b9220e4.fb37df",
-        "x": 400,
+        "x": 230,
         "y": 500,
         "wires": [
             [
-                "176d09f7.618cb6"
+                "f78455e6.b34898",
+                "cee55da4.5a10d",
+                "fb555d35.549ab"
             ]
         ]
     },
@@ -146,8 +155,8 @@
         "name": "",
         "group": "de0f7450.093f18",
         "order": 0,
-        "width": "5",
-        "height": "5",
+        "width": "3",
+        "height": "3",
         "gtype": "gage",
         "title": "Channel 1",
         "label": "Volts (V)",
@@ -192,8 +201,8 @@
         "name": "",
         "group": "de0f7450.093f18",
         "order": 0,
-        "width": "5",
-        "height": "5",
+        "width": "3",
+        "height": "3",
         "gtype": "gage",
         "title": "Channel 2",
         "label": "units",
@@ -283,8 +292,8 @@
         "name": "",
         "group": "de0f7450.093f18",
         "order": 0,
-        "width": "5",
-        "height": "5",
+        "width": "3",
+        "height": "3",
         "gtype": "gage",
         "title": "Channel 3",
         "label": "Volts (V)",
@@ -309,8 +318,8 @@
         "name": "",
         "group": "de0f7450.093f18",
         "order": 0,
-        "width": "5",
-        "height": "5",
+        "width": "3",
+        "height": "3",
         "gtype": "gage",
         "title": "Channel 4",
         "label": "Volts (V)",
@@ -327,6 +336,69 @@
         "x": 890,
         "y": 560,
         "wires": []
+    },
+    {
+        "id": "fb555d35.549ab",
+        "type": "file",
+        "z": "14d701a3.67e56e",
+        "name": "",
+        "filename": "/media/pi/CHEN/test.csv",
+        "appendNewline": true,
+        "createDir": true,
+        "overwriteFile": "false",
+        "x": 710,
+        "y": 660,
+        "wires": []
+    },
+    {
+        "id": "16076214.e8af7e",
+        "type": "debug",
+        "z": "14d701a3.67e56e",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "x": 540,
+        "y": 860,
+        "wires": []
+    },
+    {
+        "id": "f78455e6.b34898",
+        "type": "debug",
+        "z": "14d701a3.67e56e",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "x": 660,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "cee55da4.5a10d",
+        "type": "trigger",
+        "z": "14d701a3.67e56e",
+        "op1": "",
+        "op2": "0",
+        "op1type": "pay",
+        "op2type": "str",
+        "duration": "-500",
+        "extend": false,
+        "units": "ms",
+        "reset": "",
+        "bytopic": "all",
+        "name": "",
+        "x": 460,
+        "y": 500,
+        "wires": [
+            [
+                "176d09f7.618cb6"
+            ]
+        ]
     },
     {
         "id": "b9220e4.fb37df",
@@ -349,8 +421,8 @@
         "name": "DAQ_Reader",
         "tab": "d1b5c3d4.757b4",
         "disp": true,
-        "width": "10",
-        "collapse": false
+        "width": "6",
+        "collapse": true
     },
     {
         "id": "d1b5c3d4.757b4",
