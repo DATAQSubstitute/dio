@@ -1,0 +1,673 @@
+[
+    {
+        "id": "8b5a45e1.1c4868",
+        "type": "inject",
+        "z": "32ce61f9.86695e",
+        "name": "",
+        "topic": "",
+        "payload": "start",
+        "payloadType": "str",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "x": 270,
+        "y": 100,
+        "wires": [
+            [
+                "aad2bcae.058e7"
+            ]
+        ]
+    },
+    {
+        "id": "ca81f3e.4f5911",
+        "type": "inject",
+        "z": "32ce61f9.86695e",
+        "name": "",
+        "topic": "",
+        "payload": "ms 1",
+        "payloadType": "str",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "x": 260,
+        "y": 320,
+        "wires": [
+            [
+                "aad2bcae.058e7"
+            ]
+        ]
+    },
+    {
+        "id": "5d4b0473.e55e8c",
+        "type": "inject",
+        "z": "32ce61f9.86695e",
+        "name": "",
+        "topic": "",
+        "payload": "encode 1",
+        "payloadType": "str",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "x": 260,
+        "y": 370,
+        "wires": [
+            [
+                "aad2bcae.058e7"
+            ]
+        ]
+    },
+    {
+        "id": "aad2bcae.058e7",
+        "type": "function",
+        "z": "32ce61f9.86695e",
+        "name": "Eight Channels",
+        "func": "msg.payload += '\\r';\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 680,
+        "y": 200,
+        "wires": [
+            [
+                "9ec3b76c.8b2768"
+            ]
+        ]
+    },
+    {
+        "id": "ac8783e4.784b5",
+        "type": "inject",
+        "z": "32ce61f9.86695e",
+        "name": "",
+        "topic": "",
+        "payload": "stop",
+        "payloadType": "str",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "x": 270,
+        "y": 40,
+        "wires": [
+            [
+                "aad2bcae.058e7"
+            ]
+        ]
+    },
+    {
+        "id": "9ec3b76c.8b2768",
+        "type": "serial out",
+        "z": "32ce61f9.86695e",
+        "name": "",
+        "serial": "945ec4d6.b1ef88",
+        "x": 920,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "68cf09f8.8a7898",
+        "type": "serial in",
+        "z": "32ce61f9.86695e",
+        "name": "",
+        "serial": "f0fe1a9c.44e428",
+        "x": 110,
+        "y": 600,
+        "wires": [
+            [
+                "51a1a0c4.5d606"
+            ]
+        ]
+    },
+    {
+        "id": "babc4e25.0fdd7",
+        "type": "ui_gauge",
+        "z": "32ce61f9.86695e",
+        "name": "",
+        "group": "6abade22.d6dab",
+        "order": 1,
+        "width": "3",
+        "height": "3",
+        "gtype": "gage",
+        "title": "Channel 1",
+        "label": "Volts (V)",
+        "format": "{{value}}",
+        "min": "-10",
+        "max": "10",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "x": 1220,
+        "y": 400,
+        "wires": []
+    },
+    {
+        "id": "f7cfe2c3.90f7b",
+        "type": "ui_gauge",
+        "z": "32ce61f9.86695e",
+        "name": "",
+        "group": "6abade22.d6dab",
+        "order": 2,
+        "width": "3",
+        "height": "3",
+        "gtype": "gage",
+        "title": "Channel 2",
+        "label": "units",
+        "format": "{{value}}",
+        "min": "-10",
+        "max": "10",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "x": 1220,
+        "y": 440,
+        "wires": []
+    },
+    {
+        "id": "e4261ad8.41d438",
+        "type": "function",
+        "z": "32ce61f9.86695e",
+        "name": "Map 1",
+        "func": "var state = context.get('state')||false;\n\nif (msg.topic === \"trigger\") \n{\n    context.set('state',true);\n    return [ null, null, null, null ];\n}\nelse\n{\n    if(state)\n    {\n        context.set('state',false);\n\n        var sep2 = msg.payload;\n\n        var msg1 = { payload: sep2[0] };\n        var msg2 = { payload: sep2[1] };\n        var msg3 = { payload: sep2[2] };\n        var msg4 = { payload: sep2[3] };\n\n        return [msg1, msg2, msg3, msg4];\n    }\n    else\n    {\n        return [ null, null, null, null ];\n    }\n}\n    ",
+        "outputs": 4,
+        "noerr": 0,
+        "x": 700,
+        "y": 450,
+        "wires": [
+            [
+                "babc4e25.0fdd7"
+            ],
+            [
+                "f7cfe2c3.90f7b"
+            ],
+            [
+                "487d74cb.6f3d0c"
+            ],
+            [
+                "6871420d.771c6c"
+            ]
+        ]
+    },
+    {
+        "id": "487d74cb.6f3d0c",
+        "type": "ui_gauge",
+        "z": "32ce61f9.86695e",
+        "name": "",
+        "group": "6abade22.d6dab",
+        "order": 3,
+        "width": "3",
+        "height": "3",
+        "gtype": "gage",
+        "title": "Channel 3",
+        "label": "Volts (V)",
+        "format": "{{value}}",
+        "min": "-10",
+        "max": "10",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "x": 1220,
+        "y": 480,
+        "wires": []
+    },
+    {
+        "id": "6871420d.771c6c",
+        "type": "ui_gauge",
+        "z": "32ce61f9.86695e",
+        "name": "",
+        "group": "6abade22.d6dab",
+        "order": 4,
+        "width": "3",
+        "height": "3",
+        "gtype": "gage",
+        "title": "Channel 4",
+        "label": "Volts (V)",
+        "format": "{{value}}",
+        "min": "-10",
+        "max": "10",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "x": 1220,
+        "y": 520,
+        "wires": []
+    },
+    {
+        "id": "59e07fb5.93b49",
+        "type": "file",
+        "z": "32ce61f9.86695e",
+        "name": "",
+        "filename": "/media/pi/CHEN/test2.csv",
+        "appendNewline": true,
+        "createDir": true,
+        "overwriteFile": "false",
+        "x": 610,
+        "y": 710,
+        "wires": []
+    },
+    {
+        "id": "51a1a0c4.5d606",
+        "type": "switch",
+        "z": "32ce61f9.86695e",
+        "name": "",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "cont",
+                "v": "stop",
+                "vt": "str"
+            },
+            {
+                "t": "cont",
+                "v": "start",
+                "vt": "str"
+            },
+            {
+                "t": "cont",
+                "v": "encode",
+                "vt": "str"
+            },
+            {
+                "t": "cont",
+                "v": "slist",
+                "vt": "str"
+            },
+            {
+                "t": "cont",
+                "v": "ms",
+                "vt": "str"
+            },
+            {
+                "t": "else"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 6,
+        "x": 310,
+        "y": 600,
+        "wires": [
+            [
+                "488e5639.8df558"
+            ],
+            [],
+            [],
+            [],
+            [],
+            [
+                "f15bb70f.d4f048",
+                "3164404d.d85d6"
+            ]
+        ]
+    },
+    {
+        "id": "dc4dd5c0.d97dc8",
+        "type": "inject",
+        "z": "32ce61f9.86695e",
+        "name": "",
+        "topic": "",
+        "payload": "slist",
+        "payloadType": "str",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "x": 90,
+        "y": 200,
+        "wires": [
+            [
+                "a724ad3d.bc6db",
+                "e08f3b91.f65638"
+            ]
+        ]
+    },
+    {
+        "id": "a724ad3d.bc6db",
+        "type": "function",
+        "z": "32ce61f9.86695e",
+        "name": "slist",
+        "func": "var msg1 = { payload: \"slist 0 0\" };\nvar msg2 = { payload: \"slist 1 1\" };\nvar msg3 = { payload: \"slist 2 2\" };\nvar msg4 = { payload: \"slist 3 3\" };\nreturn [msg1, msg2, msg3, msg4];",
+        "outputs": 4,
+        "noerr": 0,
+        "x": 220,
+        "y": 170,
+        "wires": [
+            [
+                "a88a881.9d75d78"
+            ],
+            [
+                "a88a881.9d75d78"
+            ],
+            [
+                "a88a881.9d75d78"
+            ],
+            [
+                "a88a881.9d75d78"
+            ]
+        ]
+    },
+    {
+        "id": "a88a881.9d75d78",
+        "type": "function",
+        "z": "32ce61f9.86695e",
+        "name": "Timing",
+        "func": "if (msg.payload == \"slist 0 0\") {\n    setTimeout(function(){ /*alert(\"Channel 1\");*/}, 0);\n} else if (msg.payload == \"slist 1 1\") {\n    setTimeout(function(){ /*alert(\"Channel 2\");*/}, 100);\n} else if (msg.payload == \"slist 2 2\") {\n    setTimeout(function(){ /*alert(\"Channel 3\");*/}, 200);\n} else if (msg.payload == \"slist 3 3\") {\n    setTimeout(function(){ /*alert(\"Channel 4\");*/}, 300);\n} else if (msg.payload == \"slist 4 4\") {\n    setTimeout(function(){ /*alert(\"Channel 5\");*/}, 400);\n} else if (msg.payload == \"slist 5 5\") {\n    setTimeout(function(){ /*alert(\"Channel 6\");*/}, 500);\n} else if (msg.payload == \"slist 6 6\") {\n    setTimeout(function(){ /*alert(\"Channel 7\");*/}, 600);\n} else if (msg.payload == \"slist 7 7\") {\n    setTimeout(function(){ /*alert(\"Channel 8\");*/}, 700);\n}\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 390,
+        "y": 200,
+        "wires": [
+            [
+                "aad2bcae.058e7"
+            ]
+        ]
+    },
+    {
+        "id": "488e5639.8df558",
+        "type": "function",
+        "z": "32ce61f9.86695e",
+        "name": "Clear Meters",
+        "func": "msg.payload = -10;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 710,
+        "y": 520,
+        "wires": [
+            [
+                "ed1742ed.06c7e",
+                "41ca6a26.7d9ea4",
+                "b65b9519.538198",
+                "42d1b326.fd7b9c",
+                "487d74cb.6f3d0c",
+                "6871420d.771c6c",
+                "babc4e25.0fdd7",
+                "f7cfe2c3.90f7b"
+            ]
+        ]
+    },
+    {
+        "id": "e08f3b91.f65638",
+        "type": "function",
+        "z": "32ce61f9.86695e",
+        "name": "slist_2",
+        "func": "var msg1 = { payload: \"slist 4 4\" };\nvar msg2 = { payload: \"slist 5 5\" };\nvar msg3 = { payload: \"slist 6 6\" };\nvar msg4 = { payload: \"slist 7 7\" };\nreturn [msg1, msg2, msg3, msg4];",
+        "outputs": 4,
+        "noerr": 0,
+        "x": 220,
+        "y": 240,
+        "wires": [
+            [
+                "a88a881.9d75d78"
+            ],
+            [
+                "a88a881.9d75d78"
+            ],
+            [
+                "a88a881.9d75d78"
+            ],
+            [
+                "a88a881.9d75d78"
+            ]
+        ]
+    },
+    {
+        "id": "42d1b326.fd7b9c",
+        "type": "ui_gauge",
+        "z": "32ce61f9.86695e",
+        "name": "",
+        "group": "6abade22.d6dab",
+        "order": 0,
+        "width": "3",
+        "height": "3",
+        "gtype": "gage",
+        "title": "Channel 5",
+        "label": "Volts (V)",
+        "format": "{{value}}",
+        "min": "-10",
+        "max": 10,
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "x": 1220,
+        "y": 560,
+        "wires": []
+    },
+    {
+        "id": "b65b9519.538198",
+        "type": "ui_gauge",
+        "z": "32ce61f9.86695e",
+        "name": "",
+        "group": "6abade22.d6dab",
+        "order": 0,
+        "width": "3",
+        "height": "3",
+        "gtype": "gage",
+        "title": "Channel 6",
+        "label": "Volts (V)",
+        "format": "{{value}}",
+        "min": "-10",
+        "max": 10,
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "x": 1220,
+        "y": 600,
+        "wires": []
+    },
+    {
+        "id": "ed1742ed.06c7e",
+        "type": "ui_gauge",
+        "z": "32ce61f9.86695e",
+        "name": "",
+        "group": "6abade22.d6dab",
+        "order": 0,
+        "width": "3",
+        "height": "3",
+        "gtype": "gage",
+        "title": "Channel 7",
+        "label": "Volts (V)",
+        "format": "{{value}}",
+        "min": "-10",
+        "max": 10,
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "x": 1220,
+        "y": 640,
+        "wires": []
+    },
+    {
+        "id": "41ca6a26.7d9ea4",
+        "type": "ui_gauge",
+        "z": "32ce61f9.86695e",
+        "name": "",
+        "group": "6abade22.d6dab",
+        "order": 0,
+        "width": "3",
+        "height": "3",
+        "gtype": "gage",
+        "title": "Channel 8",
+        "label": "Volts (V)",
+        "format": "{{value}}",
+        "min": "-10",
+        "max": 10,
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "x": 1220,
+        "y": 680,
+        "wires": []
+    },
+    {
+        "id": "3164404d.d85d6",
+        "type": "function",
+        "z": "32ce61f9.86695e",
+        "name": "Split",
+        "func": "var str = msg.payload;\n\nvar sep = str.split('\\r');\nmsg.payload = sep[0].split(\",\");\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 470,
+        "y": 600,
+        "wires": [
+            [
+                "e4261ad8.41d438",
+                "70df3afd.e36a34"
+            ]
+        ]
+    },
+    {
+        "id": "70df3afd.e36a34",
+        "type": "function",
+        "z": "32ce61f9.86695e",
+        "name": "Map 2",
+        "func": "var sep2 = msg.payload;\n/*\nvar sep = str.split('\\r');\nvar sep2 = sep[0].split(\",\");\n*/\n\nvar msg5 = { payload: sep2[4] };\nvar msg6 = { payload: sep2[5] };\nvar msg7 = { payload: sep2[6] };\nvar msg8 = { payload: sep2[7] };\n\n\nreturn [msg5, msg6, msg7, msg8];",
+        "outputs": 4,
+        "noerr": 0,
+        "x": 700,
+        "y": 600,
+        "wires": [
+            [
+                "42d1b326.fd7b9c"
+            ],
+            [
+                "b65b9519.538198"
+            ],
+            [
+                "ed1742ed.06c7e"
+            ],
+            [
+                "41ca6a26.7d9ea4"
+            ]
+        ]
+    },
+    {
+        "id": "f15bb70f.d4f048",
+        "type": "file",
+        "z": "32ce61f9.86695e",
+        "name": "",
+        "filename": "/media/pi/9139-0D17/test3.csv",
+        "appendNewline": true,
+        "createDir": false,
+        "overwriteFile": "false",
+        "x": 640,
+        "y": 780,
+        "wires": []
+    },
+    {
+        "id": "26f38080.772fe",
+        "type": "inject",
+        "z": "32ce61f9.86695e",
+        "name": "",
+        "topic": "trigger",
+        "payload": "",
+        "payloadType": "str",
+        "repeat": ".5",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "x": 320,
+        "y": 450,
+        "wires": [
+            [
+                "e4261ad8.41d438",
+                "70df3afd.e36a34"
+            ]
+        ]
+    },
+    {
+        "id": "95b5190f.7f9f18",
+        "type": "function",
+        "z": "32ce61f9.86695e",
+        "name": "Split",
+        "func": "// initialize state\nvar state = context.get('state')||false;\n\nif (msg.topic === \"trigger\") \n{\n    context.set('state',true);\n    return [ null, null, null, null ];\n}\nelse\n{\n    if(state)\n    {\n        context.set('state',false);\n        var str = msg.payload;\n        var str1 = str.split('\\r');\n        var sep = str1[0].split(\",\");\n        var msg1 = { payload: sep[0] };\n        var msg2 = { payload: sep[1] };\n        var msg3 = { payload: sep[2] };\n        var msg4 = { payload: sep[3] };\n        return [msg1, msg2, msg3, msg4];\n    }\n    else\n    {\n        return [ null, null, null, null ];\n    }\n}\n\n",
+        "outputs": 4,
+        "noerr": 0,
+        "x": 330,
+        "y": 780,
+        "wires": [
+            [],
+            [],
+            [],
+            []
+        ]
+    },
+    {
+        "id": "945ec4d6.b1ef88",
+        "type": "serial-port",
+        "z": "",
+        "serialport": "/dev/ttyACM0",
+        "serialbaud": "57600",
+        "databits": "8",
+        "parity": "none",
+        "stopbits": "1",
+        "newline": "10",
+        "bin": "false",
+        "out": "time",
+        "addchar": false
+    },
+    {
+        "id": "f0fe1a9c.44e428",
+        "type": "serial-port",
+        "z": "",
+        "serialport": "/dev/ttyACM0",
+        "serialbaud": "57600",
+        "databits": "8",
+        "parity": "none",
+        "stopbits": "1",
+        "newline": "10",
+        "bin": "false",
+        "out": "time",
+        "addchar": false
+    },
+    {
+        "id": "6abade22.d6dab",
+        "type": "ui_group",
+        "z": "",
+        "name": "DAQ_Reader",
+        "tab": "e618b2cd.c6cb",
+        "disp": true,
+        "width": "6",
+        "collapse": true
+    },
+    {
+        "id": "e618b2cd.c6cb",
+        "type": "ui_tab",
+        "z": "",
+        "name": "DATAQ",
+        "icon": "dashboard",
+        "order": 1
+    }
+]
