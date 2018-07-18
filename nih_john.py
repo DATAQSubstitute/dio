@@ -59,7 +59,10 @@ for cfg in device:
   #print(regPID)
 
   # find a match with the target product id
-  if regPID == '0x4109':
+  # id is variable depending on product
+  # 1100 -> 0x1101      1110 -> 0x1111      1120 -> 0x1121
+  # 2108 -> 0x2107      4108 -> 0x4109      4208 -> 0x4209
+  if regPID == '0x4109':      # Change product id to needs
     print("Device found\n")
     uid = cfg.idProduct
 
