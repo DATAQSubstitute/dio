@@ -1,0 +1,1330 @@
+[
+    {
+        "id": "1fa710b.3f2dfef",
+        "type": "debug",
+        "z": "7b0b5d6c.6db264",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "x": 980,
+        "y": 430,
+        "wires": []
+    },
+    {
+        "id": "af23c35a.42148",
+        "type": "serial out",
+        "z": "7b0b5d6c.6db264",
+        "name": "",
+        "serial": "d97b33b5.ee76a",
+        "x": 990,
+        "y": 370,
+        "wires": []
+    },
+    {
+        "id": "25e4d514.7158fa",
+        "type": "serial in",
+        "z": "7b0b5d6c.6db264",
+        "name": "",
+        "serial": "d97b33b5.ee76a",
+        "x": 180,
+        "y": 770,
+        "wires": [
+            [
+                "87d3493e.6c89c8"
+            ]
+        ]
+    },
+    {
+        "id": "90e46fae.8c31b",
+        "type": "file",
+        "z": "7b0b5d6c.6db264",
+        "name": "data file",
+        "filename": "",
+        "appendNewline": true,
+        "createDir": true,
+        "overwriteFile": "false",
+        "x": 1230,
+        "y": 730,
+        "wires": []
+    },
+    {
+        "id": "87d3493e.6c89c8",
+        "type": "function",
+        "z": "7b0b5d6c.6db264",
+        "name": "data/resp",
+        "func": "//global.set(\"flag\", false);\nvar flag = global.get(\"flag\") || 0;\n//var fs = global.get(\"fileSize\");\n//var ms = global.get(\"maxSize\");\nif(msg.payload == \"stop\\r\") {\n    return [null, null, null];\n}\n\nif (flag != \"0\" &&  global.get(\"recSize\") <\n    global.get(\"maxSize\")) {\n    msg.filename = global.get(\"address\");\n    return [ null, msg, null ];\n} else if (flag != \"0\" && global.get(\"recSize\") >=\n    global.get(\"maxSize\")) {\n    msg.payload = global.get(\"recSize\");\n    return [ null, null, msg ];\n}\nelse {\n    msg.topic = \"resp\";\n    return [ msg, null, null ];\n}\n",
+        "outputs": 3,
+        "noerr": 0,
+        "x": 360,
+        "y": 770,
+        "wires": [
+            [
+                "c4d981d5.eb482"
+            ],
+            [
+                "e42d4e2.3cd98b",
+                "30af024a.f35b8e",
+                "90e46fae.8c31b"
+            ],
+            [
+                "6ff56d61.b8fcc4"
+            ]
+        ]
+    },
+    {
+        "id": "d84e5039.d108",
+        "type": "file in",
+        "z": "7b0b5d6c.6db264",
+        "name": "SU file",
+        "filename": "/home/pi/EIGHT/di1100.txt",
+        "format": "utf8",
+        "sendError": true,
+        "x": 600,
+        "y": 370,
+        "wires": [
+            [
+                "511ca91e.a20df8"
+            ]
+        ]
+    },
+    {
+        "id": "9f585a94.088088",
+        "type": "inject",
+        "z": "7b0b5d6c.6db264",
+        "name": "startup",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "0.2",
+        "x": 380,
+        "y": 370,
+        "wires": [
+            [
+                "d84e5039.d108"
+            ]
+        ]
+    },
+    {
+        "id": "511ca91e.a20df8",
+        "type": "function",
+        "z": "7b0b5d6c.6db264",
+        "name": "parse",
+        "func": "global.set(\"flag\", \"0\");\nvar index = context.get('index')||0;\nvar command = context.get('command')||\"\";\n\nif(msg.topic == \"resp\")\n//if(msg.payload  == \"resp\")\n{\n    if(command)   //.length > 0)\n    {\n        var splits = command.split('\\r');\n        if(index < (splits.length-1))\n        {\n            msg.payload = splits[index++] + '\\r';\n            context.set('index',index);\n            return msg;\n        }\n        else\n        {\n            command = null;\n            context.set('command',command);\n        }\n    \n    }\n    msg.topic = null;\n    //msg.payload = command;\n    //return msg;\n}\nelse\n{\n    command = msg.payload;\n    command = command.replace(/\\r\\n|\\n/g,'\\r');\n    context.set('command',command);\n    index = 0;\n    var splits = command.split('\\r');\n    msg.payload = splits[index++] + '\\r';    \n    context.set('index',index);\n    return msg;\n}\n   \n",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 780,
+        "y": 370,
+        "wires": [
+            [
+                "af23c35a.42148",
+                "1fa710b.3f2dfef"
+            ]
+        ]
+    },
+    {
+        "id": "7c962d6d.0fafd4",
+        "type": "inject",
+        "z": "7b0b5d6c.6db264",
+        "name": "",
+        "topic": "",
+        "payload": "start",
+        "payloadType": "str",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": "",
+        "x": 180,
+        "y": 600,
+        "wires": [
+            [
+                "a6c4d318.b23f4",
+                "aa6dd3e8.85c77"
+            ]
+        ]
+    },
+    {
+        "id": "a6c4d318.b23f4",
+        "type": "function",
+        "z": "7b0b5d6c.6db264",
+        "name": "add cr",
+        "func": "msg.payload += '\\r';\nif (msg.payload == \"start\\r\") {\n    if (global.get(\"flag\") == \"0\") {\n        global.set(\"flag\", \"1\")\n    } else {\n        global.set(\"flag\", global.get(\"flag\"));\n    }\n    // global.set(\"maxSize\", 1000000);\n    global.set(\"recSize\", 0);\n    global.set(\"fileSize\", 0);\n    global.set(\"address\", \n        global.get(\"address\").substr(0, \n        global.get(\"defaddr\")) + \"/di1100_\" +\n        global.get(\"flag\") + \".csv\");\n//} else if (msg.payload == \"stop\\r\") {\n    global.set(\"st\", false);\n}\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 450,
+        "y": 480,
+        "wires": [
+            [
+                "af23c35a.42148"
+            ]
+        ]
+    },
+    {
+        "id": "63443670.b504f8",
+        "type": "inject",
+        "z": "7b0b5d6c.6db264",
+        "name": "",
+        "topic": "",
+        "payload": "stop",
+        "payloadType": "str",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": "",
+        "x": 170,
+        "y": 920,
+        "wires": [
+            [
+                "a6c4d318.b23f4",
+                "47da1661.fca168",
+                "aa6dd3e8.85c77"
+            ]
+        ]
+    },
+    {
+        "id": "e42d4e2.3cd98b",
+        "type": "function",
+        "z": "7b0b5d6c.6db264",
+        "name": "data count",
+        "func": "var datacount;\n// var datacount = context.get('datacount')||0;\nif (msg.topic === \"trigger\") \n{\n    context.set('state',true);\n    return null;\n}\nif (global.get(\"flag\") != \"0\") {\n    if(global.get(\"recSize\") < \n       global.get(\"maxSize\")) {\n        var flag = parseInt(global.get(\"flag\"));\n        datacount = global.get(\"recSize\");\n        datacount += msg.payload.length;\n        global.set(\"recSize\", datacount);\n        var totalfs = global.get(\"fileSize\") +\n        datacount;\n        msg.payload = totalfs.toString();\n        return msg;\n    } else {\n        return null;\n    }\n}\n\nreturn null;\n\n// datacount += msg.payload.length;\n// context.set('datacount',datacount);\n// msg.payload = datacount.toString();\n// return msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 1400,
+        "y": 310,
+        "wires": [
+            [
+                "3d44e921.250c06"
+            ]
+        ]
+    },
+    {
+        "id": "3d44e921.250c06",
+        "type": "ui_text",
+        "z": "7b0b5d6c.6db264",
+        "group": "1b6ceb55.d7c1f5",
+        "order": 2,
+        "width": "3",
+        "height": "2",
+        "name": "di1100",
+        "label": "count",
+        "format": "{{msg.payload}}",
+        "layout": "col-center",
+        "x": 1690,
+        "y": 310,
+        "wires": []
+    },
+    {
+        "id": "4b09eab1.abf164",
+        "type": "ui_template",
+        "z": "7b0b5d6c.6db264",
+        "group": "4c9fb256.55a25c",
+        "name": "DATAQ Chart.js",
+        "order": 9,
+        "width": "8",
+        "height": "8",
+        "format": "<!-- See the read me comment node. Colin Law's original notes follow -->\n\n<!--\nA node-red Dashboard UI template to draw charts using chart.js\nBefore use download the file Chart.bundle.min.js from chartjs.org and \nsave in an appropriate folder (e.g. .node-red/static). \nIn settings.js set httpStatic to the full path of that folder and restart node-red.\nMake sure that the options for 'Pass through messages' and 'Add output messages' \nin this node are cleared.\nFor basic use set the id and size you want in the canvas tag and set chartID to the id\nSetup chartDef as required for your chart (see the chart.js docs)\nIn addition, for each dataset specify in chartDef the message topic that you will use for that channel.\nTo (optionally) provide the chart with a one-off set of data send the node a message with:\nmsg.action = \"load\"\nmsg.payload = [\n{topic: \"mytopic1\", data: [{x: x1,y:y2},{x:x2,y:y2},...]},\n{topic: \"mytopic2\", data: [{x: x1,y:y2},{x:x2,y:y2},...]},\n...]\nWhere mytopic1 and mytopic2 are the the topics specified in the chartDef\n\nTo provide the chart with data incrementally (for a time series for example)\nsend it messages of the form\n{topic: \"mytopic1\", payload: {x:xvalue,y:yvalue}}\nThe chart will be updated as each sample is provided.\nTo limit the growth of the chart set chartMaxPoints and/or chartTimeSpan in the Chart Helper node\nas described at the head of that node.\nIf you find that chart seems to flicker and scroll bars come and go then try \nsetting a size other than auto in the Size specification for this node.\n\nFor Bar charts the x value is the label for the bar and the y value is the bar value\n\nNote that since the chart samples are stored in the browser then the chart will be cleared each\ntime the browser is refreshed (and will be clear on initially opening the view). In order to \nprovided persistency over browser opening and refresh this node may be used in conjunction with\nthe Chart Helper function node.  Details for its use are in the source of that node.\n\nIf your flow includes more that one instance of this script then the line fetching \nChart.bundle.min.js need only be included in one of them\n-->\n\n<script src=\"/Chart.bundle.min.js\"></script>\n<canvas id=\"myChartSimple1\" width=\"1000\" height=\"1000\"></canvas>\n<script>\n(function() {\n    var chartID = \"myChartSimple1\";           // set this to the id you have specified in the canvas tag above\n    // setup the chart definition as defined in the chart.js documentation, in addition setting up the topic\n    // for each channel\n    var chartDef = {\n        type: 'line',\n        data: {\n            datasets: [{\n                topic: \"Sin\",    // used here not by chart.js\n                label: \"Sin\",\n                yAxisID: \"1\",\n                fill: false,\n                lineTension: 0,\n                borderColor: \"#0000ff\",\n                pointRadius: 0,\n                pointHoverRadius: 0,\n                pointBorderColor: \"#0000ff\",\n                pointBackgroundColor: \"#0000ff\",\n                backgroundColor:  \"#0000ff\",\n                borderWidth: 1,\n                data: []  // data is written here later\n            }, {\n                topic: \"Triangle\",    // used here not by chart.js\n                label: \"Triangle\",\n                yAxisID: \"2\",\n                fill: false,\n                lineTension: 0,\n                borderColor: \"#ff0000\",\n                pointRadius: 0,\n                pointHoverRadius: 0,\n                pointBorderColor: \"#ff0000\",\n                pointBackgroundColor: \"#ff0000\",\n                backgroundColor:  \"#ff0000\",\n                borderWidth: 1,\n                data: []  // data is written here later\n            }]\n        },\n        options: {\n            scales: {\n                xAxes: [{\n                    type: 'linear',\n                    position: 'bottom'\n                    }\n                ],\n                yAxes: [{\n                    id: \"1\",\n                    ticks: {\n                        min: -1,\n                        max: 1,\n                        stepSize: 0.2\n                    }\n                }, {\n                    id: \"2\",\n                    ticks: {\n                        min: -1,\n                        max: 1,\n                        stepSize: .2\n                    }\n                }]\n            },\n            animation: {\n                duration: 0\n            }\n        }\n    }\n        \n/***** You shouldn't normally need to change anything below here *****/    \n    var myChart = null;\n    var loaded = false;     // indicates whether we have already had a load action\n    var chartTimeSpan;\n    var chartMaxPoints;\n\n    function doChart(msg, scope) {\n        if (!myChart) {\n            // chart does not exist so load the data and create it\n            var ctx = document.getElementById(chartID);\n            myChart = new Chart(ctx, chartDef);     \n        }\n        // chart already exists, update it\n        var datasets = myChart.data.datasets;\n        // is this a load or preload action?\n        if (msg.action === \"load\" || msg.action === \"preload\") {\n            // yes, do not allow preload if we have already had a load\n            // so do it if this is a load or we have not previously had a load\n            if (msg.action === \"load\" || !loaded) {\n                // pick up chartTimeSpan and chartMaxPoints if they have been provided\n                if (typeof msg.chartTimeSpan != 'undefined') {\n                    chartTimeSpan = msg.chartTimeSpan;\n                }\n                if (typeof msg.chartMaxPoints != 'undefined') {\n                    chartMaxPoints = msg.chartMaxPoints;\n                }\n                    \n                // replace existing data for matching topics\n                for (var j = 0; j < msg.payload.length; j++) {\n                    var topic = msg.payload[j].topic;\n                    // find it in the chart\n                    for (var i = 0; i < datasets.length; i++) {\n                        if (datasets[i].topic == topic) {\n                            // if stripping old samples by time is required then ensure the x value is Date\n                            if (chartTimeSpan > 0 ) {\n                                var data = msg.payload[j].data;\n                                for (var k = 0; k < data.length; k++) {\n                                    if (typeof data[k].x === \"string\") {\n                                        data[k].x = new Date(data[k].x);\n                                    }\n                                }\n                            }\n                            if (chartDef.type !== \"bar\") {\n                                datasets[i].data = msg.payload[j].data;\n                            } else {\n                                // bar chart so x values must go to labels and y values to dataset\n                                datasets[i].data = [];\n                                myChart.data.labels = [];\n                                var data = msg.payload[j].data;\n                                for (var k = 0; k < data.length; k++) {\n                                    datasets[i].data.push(data[k].y);\n                                    myChart.data.labels.push(data[k].x);\n                                }\n                            }\n                            break;\n                        }\n                    }\n                }\n            }\n            if (msg.action === \"load\") loaded = true;\n            myChart.update();\n        } else {\n            // does the topic match one of the datasets?\n            for (var i = 0; i < datasets.length; i++) {\n                if (datasets[i].topic == msg.topic) {\n                    // if stripping old samples by time is required then ensure the x value is Date\n                    if (chartTimeSpan > 0 && typeof msg.payload.x === \"string\") {\n                        msg.payload.x = new Date(msg.payload.x);\n                    }\n                    if (chartDef.type !== \"bar\") {\n                        datasets[i].data.push(msg.payload);\n                    } else {\n                         // bar chart so x value must go to labels and y value to dataset\n                        datasets[i].data.push(msg.payload.y);\n                        myChart.data.labels.push(msg.payload.x);\n                    }\n                    myChart.update();\n                    break;\n                }\n            }\n        }\n        // strip off samples older than now\n        // charTimeSpan == 0 implies don't do it\n        var shifted = false;\n        if (chartTimeSpan > 0) {\n            var now = new Date();\n            var oldestTimeAllowed = now - chartTimeSpan;\n            for (var i = 0; i < datasets.length; i++) {\n                dataset = datasets[i];\n                while(dataset.data[0] && getTime(dataset.data[0].x) < oldestTimeAllowed) {\n                    dataset.data.shift();\n                    shifted = true;\n                }\n            }\n        }\n        // strip samples off the front if there are now too many\n        // charTimeSpan == 0 implies don't do it\n        if (chartMaxPoints > 0) {\n            for (var i = 0; i < datasets.length; i++) {\n                dataset = datasets[i];\n                while(dataset.data.length > chartMaxPoints) {\n                    dataset.data.shift();\n                    shifted = true;\n                }\n            }\n        }\n        if (shifted) {\n            myChart.update();\n        }\n    };\n\n    // gets the time of an x value, works for strings or Date types\n    function getTime(x) {\n        if (typeof x === \"string\") x = new Date(x);\n        return x.getTime();\n    }\n    \n    // builds the preload message for sending back to the chart helper\n    function preloadMsg() {\n        var preMsg = {action: \"preload\", payload: \"preload\"};\n        // build array of topics in chart\n        var topics = [];\n        for (var i=0; i<chartDef.data.datasets.length; i++) {\n            topics.push(chartDef.data.datasets[i].topic);\n        }\n        preMsg.topics = topics;\n        // has the chart already been created\n        if (myChart) {\n            preMsg.lastXValue = 1;\n        } else {\n            preMsg.lastXValue = 0;\n        }\n        return preMsg;\n    }\n\n    (function(scope) {\n        // this code gets run when the a view is opened on the node in the browser\n        // send a preload message back to node red to ask it send\n        // us a complete set of data. Pass down max points and time span to the helper node for it to use\n        // plus an array of the topics of interest\n        scope.send( preloadMsg() );\n        \n        scope.$watch('msg', function(msg) {\n            if (msg) {\n                doChart(msg, scope);\n            }\n        });\n    })(scope);\n})();\n</script>\n",
+        "storeOutMessages": false,
+        "fwdInMessages": false,
+        "templateScope": "local",
+        "x": 690,
+        "y": 1310,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "4fba048d.71edac",
+        "type": "inject",
+        "z": "7b0b5d6c.6db264",
+        "name": "Load Data Set",
+        "topic": "",
+        "payload": "",
+        "payloadType": "str",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": "",
+        "x": 210,
+        "y": 1280,
+        "wires": [
+            [
+                "5cd5a258.4d346c"
+            ]
+        ]
+    },
+    {
+        "id": "5cd5a258.4d346c",
+        "type": "function",
+        "z": "7b0b5d6c.6db264",
+        "name": "Pre-load test data",
+        "func": "\n/* This function creates a two data sets, with different topics,\n   the same x values and different y values*/\n\n// Change the scale factor each time.\nvar scale = context.get('scale') || 0;\nvar firstTime = context.get('firstTime') || 0;\nvar dataIndex = context.get('dataIndex') || 0;\n\nvar dataPoints1 = context.get('dataPoints1')|| [];\n// store the value back\ncontext.set('dataPoints1',dataPoints1);\n\nvar dataPoints2 = context.get('dataPoints2')|| [];\n// store the value back\ncontext.set('dataPoints2',dataPoints2);\n\nif(scale === 0)\n{\n    scale = 10;\n    context.set('scale', scale);\n}\nmsg.payload = [];       // This will be an array of {topic, data} objects\nvar numPoints = 101;     // We will create one more than this.\nif(firstTime === 0)\n{\n    firstTime = 1;\n    context.set('firstTime', firstTime);\n    //var dataPoints1 = [];   // These will be the first array of data points \n    //var dataPoints2 = [];   // These will be the second array of data points \n\n    // For the first data set create a sine wave\n    for (var i=0; i<numPoints; i++) {\n        var point = {};\n        point.x = i;\n        point.y = Math.sin(2 * 3.14 * (i/numPoints)) * scale/10;\n        // build the data array    \n        dataPoints1.push(point);\n    }\n    context.set('dataPoints1',dataPoints1);\n    \n    // For the second data set create a triangle\n    for (var i=0; i<numPoints; i++) {\n        var point = {};\n        point.x = i;\n        point.y = Math.cos(2 * 3.14 * (i/numPoints)) * scale/10;\n        // build the data array    \n        dataPoints2.push(point);\n    }\n    context.set('dataPoints2',dataPoints2);\n\n    \n}\nelse\n{\n    /*\n    for (var i=0; i<=10; i++) {\n        var lastPoint = {};\n        lastPoint[i].x = i;\n        lastPoint[i].y = dataPoints1[i].y;\n    }\n    for (var i=0; i<=(numPoints - 10); i++) {\n        dataPoints1[i].x = i+10;\n        dataPoints1[i].y = dataPoints1[i+10].y;\n    }\n    \n    var j = 0;\n    for (var i=numPoints - 10; i<=(numPoints-1); i++) {\n        dataPoints1[i].x = i;\n        dataPoints1[i].y = lastPoints1[j++].y;\n    }\n    */\n    var lastPoint = {};\n    lastPoint = dataPoints1[0];\n    for (var i=0; i<(numPoints - 1); i++) {\n        dataPoints1[i].x = i;\n        dataPoints1[i].y = dataPoints1[i+1].y;\n    }       \n    dataPoints1[i].x = i;\n    dataPoints1[i].y = lastPoint.y;\n\n    context.set('dataPoints1',dataPoints1);\n    \n    lastPoint = dataPoints2[0];\n    for (var i=0; i<(numPoints - 1); i++) {\n        dataPoints2[i].x = i;\n        dataPoints2[i].y = dataPoints2[i+1].y;\n    }       \n    dataPoints2[i].x = i;\n    dataPoints2[i].y = lastPoint.y;\n}\n    context.set('dataPoints2',dataPoints2);\n\nmsg.action = \"load\";    // This instructs the chart node to paint the data\n\n// The payload is an array of two {topic, data} objects\nmsg.payload = [{topic: \"Sin\", data: dataPoints1},\n                {topic: \"Triangle\", data: dataPoints2}];\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 466,
+        "y": 1310,
+        "wires": [
+            [
+                "4b09eab1.abf164"
+            ]
+        ]
+    },
+    {
+        "id": "ea3445be.143b08",
+        "type": "inject",
+        "z": "7b0b5d6c.6db264",
+        "name": "",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "repeat": ".1",
+        "crontab": "",
+        "once": false,
+        "x": 215,
+        "y": 1335,
+        "wires": [
+            [
+                "5cd5a258.4d346c"
+            ]
+        ]
+    },
+    {
+        "id": "ff457f58.873b5",
+        "type": "inject",
+        "z": "7b0b5d6c.6db264",
+        "name": "",
+        "topic": "",
+        "payload": "\"flag\"",
+        "payloadType": "global",
+        "repeat": "1",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "x": 200,
+        "y": 990,
+        "wires": [
+            [
+                "dc34d018.b7631"
+            ]
+        ]
+    },
+    {
+        "id": "dbc1ac6c.d2747",
+        "type": "ui_gauge",
+        "z": "7b0b5d6c.6db264",
+        "name": "",
+        "group": "61e72a8.8237ed4",
+        "order": 1,
+        "width": "3",
+        "height": "3",
+        "gtype": "gage",
+        "title": "Channel 1",
+        "label": "Volts (V)",
+        "format": "{{value}}",
+        "min": "-10",
+        "max": "10",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "x": 1660,
+        "y": 1010,
+        "wires": []
+    },
+    {
+        "id": "deb8d815.0efa98",
+        "type": "ui_gauge",
+        "z": "7b0b5d6c.6db264",
+        "name": "",
+        "group": "61e72a8.8237ed4",
+        "order": 2,
+        "width": "3",
+        "height": "3",
+        "gtype": "gage",
+        "title": "Channel 2",
+        "label": "units",
+        "format": "{{value}}",
+        "min": "-10",
+        "max": "10",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "x": 1660,
+        "y": 1050,
+        "wires": []
+    },
+    {
+        "id": "c2a9cf87.9ca93",
+        "type": "ui_gauge",
+        "z": "7b0b5d6c.6db264",
+        "name": "",
+        "group": "6044a4b9.1ad5ec",
+        "order": 3,
+        "width": "3",
+        "height": "3",
+        "gtype": "gage",
+        "title": "Channel 3",
+        "label": "Volts (V)",
+        "format": "{{value}}",
+        "min": "-10",
+        "max": "10",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "x": 1660,
+        "y": 1090,
+        "wires": []
+    },
+    {
+        "id": "30c1ec55.35ff04",
+        "type": "ui_gauge",
+        "z": "7b0b5d6c.6db264",
+        "name": "",
+        "group": "6044a4b9.1ad5ec",
+        "order": 4,
+        "width": "3",
+        "height": "3",
+        "gtype": "gage",
+        "title": "Channel 4",
+        "label": "Volts (V)",
+        "format": "{{value}}",
+        "min": "-10",
+        "max": "10",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "x": 1660,
+        "y": 1130,
+        "wires": []
+    },
+    {
+        "id": "7f694021.2243c",
+        "type": "ui_gauge",
+        "z": "7b0b5d6c.6db264",
+        "name": "",
+        "group": "5d5d3e09.ed062",
+        "order": 5,
+        "width": "3",
+        "height": "3",
+        "gtype": "gage",
+        "title": "Channel 5",
+        "label": "Volts (V)",
+        "format": "{{value}}",
+        "min": "-10",
+        "max": 10,
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "x": 1660,
+        "y": 1170,
+        "wires": []
+    },
+    {
+        "id": "dd0e36df.dcd418",
+        "type": "ui_gauge",
+        "z": "7b0b5d6c.6db264",
+        "name": "",
+        "group": "5d5d3e09.ed062",
+        "order": 6,
+        "width": "3",
+        "height": "3",
+        "gtype": "gage",
+        "title": "Channel 6",
+        "label": "Volts (V)",
+        "format": "{{value}}",
+        "min": "-10",
+        "max": 10,
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "x": 1660,
+        "y": 1210,
+        "wires": []
+    },
+    {
+        "id": "913068c.782ab98",
+        "type": "ui_gauge",
+        "z": "7b0b5d6c.6db264",
+        "name": "",
+        "group": "53ef105b.e11c6",
+        "order": 7,
+        "width": "3",
+        "height": "3",
+        "gtype": "gage",
+        "title": "Channel 7",
+        "label": "Volts (V)",
+        "format": "{{value}}",
+        "min": "-10",
+        "max": 10,
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "x": 1660,
+        "y": 1250,
+        "wires": []
+    },
+    {
+        "id": "3e68ac3b.0e0f84",
+        "type": "ui_gauge",
+        "z": "7b0b5d6c.6db264",
+        "name": "",
+        "group": "53ef105b.e11c6",
+        "order": 8,
+        "width": "3",
+        "height": "3",
+        "gtype": "gage",
+        "title": "Channel 8",
+        "label": "Volts (V)",
+        "format": "{{value}}",
+        "min": "-10",
+        "max": 10,
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "x": 1660,
+        "y": 1290,
+        "wires": []
+    },
+    {
+        "id": "541cc148.a925c",
+        "type": "function",
+        "z": "7b0b5d6c.6db264",
+        "name": "Map 1",
+        "func": "var state = context.get('state')||false;\n\nif (msg.topic === \"trigger\") \n{\n    context.set('state',true);\n    return [ null, null, null, null ];\n}\nelse\n{\n    if(state)\n    {\n        context.set('state',false);\n\n        var sep2 = msg.payload;\n\n        var msg1 = { payload: sep2[0] };\n        var msg2 = { payload: sep2[1] };\n        var msg3 = { payload: sep2[2] };\n        var msg4 = { payload: sep2[3] };\n\n        return [msg1, msg2, msg3, msg4];\n    }\n    else\n    {\n        return [ null, null, null, null ];\n    }\n}\n    ",
+        "outputs": 4,
+        "noerr": 0,
+        "x": 1260,
+        "y": 1050,
+        "wires": [
+            [
+                "dbc1ac6c.d2747"
+            ],
+            [
+                "deb8d815.0efa98"
+            ],
+            [
+                "c2a9cf87.9ca93"
+            ],
+            [
+                "30c1ec55.35ff04"
+            ]
+        ]
+    },
+    {
+        "id": "30af024a.f35b8e",
+        "type": "function",
+        "z": "7b0b5d6c.6db264",
+        "name": "Split",
+        "func": "var str = msg.payload;\n\nvar sep = str.split('\\r');\nmsg.payload = sep[0].split(\",\");\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 960,
+        "y": 930,
+        "wires": [
+            [
+                "541cc148.a925c",
+                "47d382f6.998acc"
+            ]
+        ]
+    },
+    {
+        "id": "47d382f6.998acc",
+        "type": "function",
+        "z": "7b0b5d6c.6db264",
+        "name": "Map 2",
+        "func": "var sep2 = msg.payload;\n/*\nvar sep = str.split('\\r');\nvar sep2 = sep[0].split(\",\");\n*/\n\nvar msg5 = { payload: sep2[4] };\nvar msg6 = { payload: sep2[5] };\nvar msg7 = { payload: sep2[6] };\nvar msg8 = { payload: sep2[7] };\n\n\nreturn [msg5, msg6, msg7, msg8];",
+        "outputs": 4,
+        "noerr": 0,
+        "x": 1260,
+        "y": 1200,
+        "wires": [
+            [
+                "7f694021.2243c"
+            ],
+            [
+                "dd0e36df.dcd418"
+            ],
+            [
+                "913068c.782ab98"
+            ],
+            [
+                "3e68ac3b.0e0f84"
+            ]
+        ]
+    },
+    {
+        "id": "47da1661.fca168",
+        "type": "function",
+        "z": "7b0b5d6c.6db264",
+        "name": "Clear Meters",
+        "func": "msg.payload = -10;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 1000,
+        "y": 1000,
+        "wires": [
+            [
+                "dbc1ac6c.d2747",
+                "deb8d815.0efa98",
+                "c2a9cf87.9ca93",
+                "30c1ec55.35ff04",
+                "7f694021.2243c",
+                "dd0e36df.dcd418",
+                "913068c.782ab98",
+                "3e68ac3b.0e0f84"
+            ]
+        ]
+    },
+    {
+        "id": "89184307.7ba31",
+        "type": "inject",
+        "z": "7b0b5d6c.6db264",
+        "name": "",
+        "topic": "trigger",
+        "payload": "",
+        "payloadType": "str",
+        "repeat": ".5",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "x": 990,
+        "y": 1080,
+        "wires": [
+            [
+                "541cc148.a925c",
+                "47d382f6.998acc"
+            ]
+        ]
+    },
+    {
+        "id": "6ff56d61.b8fcc4",
+        "type": "function",
+        "z": "7b0b5d6c.6db264",
+        "name": "Change Flag",
+        "func": "//setTimeout(function(){\n    //var num = parseInt(global.get(\"flag\"));\n    /*if (num >= 8) {\n        num = 0;\n    }*/\n    //num += 1;\n    //global.set(\"flag\", num.toString());\n    //global.set(\"recSize\", 0);\n    //global.set(\"address\", \"/media/pi/EIGHT/di1100_\" +\n    //                    global.get(\"flag\") + \".csv\");\n//}, 0.1);\nif(global.get(\"st\") === false) {\n    global.set(\"fileSize\",\n            global.get(\"fileSize\") +\n            global.get(\"recSize\"));\n    global.set(\"st\", true);\n    msg.payload = \"stop\\r\";\n    return msg;\n}\nreturn null;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 760,
+        "y": 830,
+        "wires": [
+            [
+                "a6ef637d.26337",
+                "29ca4dde.b605c2"
+            ]
+        ]
+    },
+    {
+        "id": "dc34d018.b7631",
+        "type": "ui_text",
+        "z": "7b0b5d6c.6db264",
+        "group": "40680217.503c8c",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Flag",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "x": 450,
+        "y": 990,
+        "wires": []
+    },
+    {
+        "id": "c4d981d5.eb482",
+        "type": "delay",
+        "z": "7b0b5d6c.6db264",
+        "name": "",
+        "pauseType": "delay",
+        "timeout": "5",
+        "timeoutUnits": "milliseconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "x": 580,
+        "y": 560,
+        "wires": [
+            [
+                "511ca91e.a20df8"
+            ]
+        ]
+    },
+    {
+        "id": "a6ef637d.26337",
+        "type": "delay",
+        "z": "7b0b5d6c.6db264",
+        "name": "",
+        "pauseType": "delay",
+        "timeout": "0.5",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "x": 940,
+        "y": 870,
+        "wires": [
+            [
+                "bfb40fbc.63431"
+            ]
+        ]
+    },
+    {
+        "id": "bfb40fbc.63431",
+        "type": "function",
+        "z": "7b0b5d6c.6db264",
+        "name": "Re-start",
+        "func": "if(global.get(\"st\") === true) {\n    msg.payload = \"start\\r\";\n    var num = parseInt(global.get(\"flag\"));\n    num += 1;\n    global.set(\"flag\", num.toString());\n    global.set(\"recSize\", 0);\n    global.set(\"address\",\n        global.get(\"address\").substr(0, \n        global.get(\"defaddr\")) + \"/di1100_\" + \n        global.get(\"flag\") + \".csv\");\n    global.set(\"st\", false);\n    return msg;\n}\nreturn null;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 1110,
+        "y": 890,
+        "wires": [
+            [
+                "29ca4dde.b605c2",
+                "aa6dd3e8.85c77"
+            ]
+        ]
+    },
+    {
+        "id": "29ca4dde.b605c2",
+        "type": "serial out",
+        "z": "7b0b5d6c.6db264",
+        "name": "",
+        "serial": "d97b33b5.ee76a",
+        "x": 1240,
+        "y": 830,
+        "wires": []
+    },
+    {
+        "id": "ab061281.273b",
+        "type": "inject",
+        "z": "7b0b5d6c.6db264",
+        "name": "",
+        "topic": "",
+        "payload": "Clear",
+        "payloadType": "str",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "x": 900,
+        "y": 190,
+        "wires": [
+            [
+                "eb4c88d0.2bf318"
+            ]
+        ]
+    },
+    {
+        "id": "eb4c88d0.2bf318",
+        "type": "function",
+        "z": "7b0b5d6c.6db264",
+        "name": "Delete all",
+        "func": "if (msg.payload == \"Clear\") {\n    global.set(\"d_flag\", \"1\");\n} else {\n    if (parseInt(global.get(\"d_flag\")) <=\n        parseInt(global.get(\"flag\"))) {\n        var del = global.get(\"d_flag\");\n        global.set(\"d_address\", \n            global.get(\"address\").substr(0, \n            global.get(\"defaddr\")) + \"/di1100_\" +\n            del + \".csv\");\n        del = parseInt(del) + 1;\n        global.set(\"d_flag\", del.toString());\n        msg.filename = global.get(\"d_address\");\n        return [null,msg];\n    }\n    msg.payload = \"driveclr\";\n    return [null,msg];\n}\nmsg.payload = \"delete\";\nreturn [msg,null];",
+        "outputs": 2,
+        "noerr": 0,
+        "x": 1170,
+        "y": 190,
+        "wires": [
+            [
+                "84f5b248.6f458",
+                "366ec82a.8c6fb8"
+            ],
+            [
+                "1695dcfe.5f3af3"
+            ]
+        ]
+    },
+    {
+        "id": "343bf995.fe6c36",
+        "type": "file",
+        "z": "7b0b5d6c.6db264",
+        "name": "",
+        "filename": "",
+        "appendNewline": true,
+        "createDir": false,
+        "overwriteFile": "delete",
+        "x": 1400,
+        "y": 170,
+        "wires": []
+    },
+    {
+        "id": "84f5b248.6f458",
+        "type": "delay",
+        "z": "7b0b5d6c.6db264",
+        "name": "",
+        "pauseType": "delay",
+        "timeout": "5",
+        "timeoutUnits": "milliseconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "x": 1240,
+        "y": 90,
+        "wires": [
+            [
+                "eb4c88d0.2bf318"
+            ]
+        ]
+    },
+    {
+        "id": "366ec82a.8c6fb8",
+        "type": "debug",
+        "z": "7b0b5d6c.6db264",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "x": 1420,
+        "y": 210,
+        "wires": []
+    },
+    {
+        "id": "aa6dd3e8.85c77",
+        "type": "function",
+        "z": "7b0b5d6c.6db264",
+        "name": "GDrive Clone",
+        "func": "msg.payload = \" \" + \n    global.get(\"address\").substr(0, \n    global.get(\"defaddr\")) + \" \" + global.get(\"webaddr\");\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 1210,
+        "y": 590,
+        "wires": [
+            [
+                "d520f844.495ed8"
+            ]
+        ]
+    },
+    {
+        "id": "d520f844.495ed8",
+        "type": "exec",
+        "z": "7b0b5d6c.6db264",
+        "command": "rclone sync -v ",
+        "addpay": true,
+        "append": "",
+        "useSpawn": "false",
+        "timer": "",
+        "oldrc": false,
+        "name": "",
+        "x": 1410,
+        "y": 590,
+        "wires": [
+            [
+                "750ce0ef.efc73"
+            ],
+            [
+                "750ce0ef.efc73"
+            ],
+            [
+                "750ce0ef.efc73"
+            ]
+        ]
+    },
+    {
+        "id": "750ce0ef.efc73",
+        "type": "debug",
+        "z": "7b0b5d6c.6db264",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "x": 1840,
+        "y": 500,
+        "wires": []
+    },
+    {
+        "id": "1695dcfe.5f3af3",
+        "type": "function",
+        "z": "7b0b5d6c.6db264",
+        "name": "Clear Drive?",
+        "func": "if (msg.payload == \"driveclr\")\n    return [null, msg];\nreturn [msg, null];",
+        "outputs": 2,
+        "noerr": 0,
+        "x": 1140,
+        "y": 270,
+        "wires": [
+            [
+                "84f5b248.6f458",
+                "343bf995.fe6c36"
+            ],
+            [
+                "aa6dd3e8.85c77",
+                "13c222aa.8b1d0d"
+            ]
+        ]
+    },
+    {
+        "id": "13c222aa.8b1d0d",
+        "type": "trigger",
+        "z": "7b0b5d6c.6db264",
+        "op1": "0",
+        "op2": "",
+        "op1type": "str",
+        "op2type": "nul",
+        "duration": "250",
+        "extend": false,
+        "units": "ms",
+        "reset": "",
+        "bytopic": "all",
+        "name": "A",
+        "x": 1430,
+        "y": 390,
+        "wires": [
+            [
+                "3d44e921.250c06"
+            ]
+        ]
+    },
+    {
+        "id": "e2cbfbef.2a0c98",
+        "type": "comment",
+        "z": "7b0b5d6c.6db264",
+        "name": "Insert di1100.txt address",
+        "info": "    Write the address for text file with commands to \nissue towards DATAQ product. In that text file, make\nsure that the recording speed (sample/n millisec)\nis not lower than \"5\", or the flow cannot keep up\nwith the amount of data being output.\n\nRecommended speed: \"ms 10\"",
+        "x": 590,
+        "y": 330,
+        "wires": []
+    },
+    {
+        "id": "9f6f635b.65592",
+        "type": "inject",
+        "z": "7b0b5d6c.6db264",
+        "name": "Set params",
+        "topic": "",
+        "payload": "/home/pi/EIGHT",
+        "payloadType": "str",
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "x": 220,
+        "y": 230,
+        "wires": [
+            [
+                "e7c2de2d.12bb3"
+            ]
+        ]
+    },
+    {
+        "id": "e7c2de2d.12bb3",
+        "type": "function",
+        "z": "7b0b5d6c.6db264",
+        "name": "global.address",
+        "func": "global.set(\"address\", msg.payload);\nglobal.set(\"defaddr\", msg.payload.length);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 470,
+        "y": 230,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "be09eaeb.cfa0c8",
+        "type": "comment",
+        "z": "7b0b5d6c.6db264",
+        "name": "Defaults (Adjustable) (IMPORTANT!)",
+        "info": "Set the default parameters for all major global \nfields\nDefaults\n/**\nSet drive address to which rclone will sync with\nand copy data files. Adjusted through rclone config.\nLink: https://github.com/pageauc/pi-timolo/wiki/How-to-Setup-rclone\n*/\nglobal.webaddr = \"ysgdrive:rpzero/pi/EIGHT\"\n\n/**\nSet the flag to determine which while to create or\nadd to (e.g., \"create di1100_1.csv\" or \"append maxSize\nof data to di1100_4.csv\")\n*/\nglobal.flag = \"0\"\n\n/**\nSet the address of data output. It will determine where\nthe auto-generated csv files will be written to for\nlater analysis.\n*/\nglobal.address = \"/home/pi/EIGHT\"\n\n/**\nSets the size of each csv file. It is also the amount\nappended to each file at a time, if file expansion is\nnecessary. Avoid an excessive file size (e.g., over 10.0 MB),\nas inaccuracies may rise up in the data, and the amount\nof data can overload certain app readers and prevent\ngeneration of thorough graphs.\n*/\nglobal.maxSize = \"1000000\" = approx. 1.0 MB",
+        "x": 290,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "f6c09dc5.719f2",
+        "type": "inject",
+        "z": "7b0b5d6c.6db264",
+        "name": "Set params",
+        "topic": "",
+        "payload": "1000000",
+        "payloadType": "num",
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "x": 220,
+        "y": 270,
+        "wires": [
+            [
+                "774bcb86.772d54"
+            ]
+        ]
+    },
+    {
+        "id": "774bcb86.772d54",
+        "type": "function",
+        "z": "7b0b5d6c.6db264",
+        "name": "global.maxSize",
+        "func": "global.set(\"maxSize\", msg.payload);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 470,
+        "y": 270,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "bfeb497e.563788",
+        "type": "inject",
+        "z": "7b0b5d6c.6db264",
+        "name": "Set params",
+        "topic": "",
+        "payload": "0",
+        "payloadType": "str",
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "x": 220,
+        "y": 190,
+        "wires": [
+            [
+                "3f920c0f.1b3574"
+            ]
+        ]
+    },
+    {
+        "id": "3f920c0f.1b3574",
+        "type": "function",
+        "z": "7b0b5d6c.6db264",
+        "name": "global.flag",
+        "func": "global.set(\"flag\", msg.payload);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 460,
+        "y": 190,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "49da4b73.116714",
+        "type": "inject",
+        "z": "7b0b5d6c.6db264",
+        "name": "Set params",
+        "topic": "",
+        "payload": "ysgdrive:rpzero/pi/EIGHT",
+        "payloadType": "str",
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "x": 220,
+        "y": 110,
+        "wires": [
+            [
+                "95387310.e19d5"
+            ]
+        ]
+    },
+    {
+        "id": "95387310.e19d5",
+        "type": "function",
+        "z": "7b0b5d6c.6db264",
+        "name": "global.webaddr",
+        "func": "global.set(\"webaddr\", msg.payload);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 480,
+        "y": 110,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "cdc38f2e.e46db",
+        "type": "comment",
+        "z": "7b0b5d6c.6db264",
+        "name": "Will display error:1 sometimes, but it still works",
+        "info": "",
+        "x": 1440,
+        "y": 550,
+        "wires": []
+    },
+    {
+        "id": "4ba94623.0459e8",
+        "type": "inject",
+        "z": "7b0b5d6c.6db264",
+        "name": "",
+        "topic": "",
+        "payload": "\"address\"",
+        "payloadType": "global",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "x": 1590,
+        "y": 500,
+        "wires": [
+            [
+                "750ce0ef.efc73"
+            ]
+        ]
+    },
+    {
+        "id": "505f599e.129508",
+        "type": "comment",
+        "z": "7b0b5d6c.6db264",
+        "name": "Clears out data",
+        "info": "Looks through the folder where the data files are\nbeing written to, and deletes all of them at once. It\nthen uses rclone to reflect that change on the \ncloud drive as well. This function can only be properly\nexecuted right after stopping the recording. It will\nnot work if the flow is rebooted through the \"startup\"\ninjection node or the flow itself is redeployed.",
+        "x": 1210,
+        "y": 50,
+        "wires": []
+    },
+    {
+        "id": "d57d2151.7b665",
+        "type": "comment",
+        "z": "7b0b5d6c.6db264",
+        "name": " Reads di1100.txt",
+        "info": "Processes the instructions found in the di1100.txt \nand executes each line.",
+        "x": 790,
+        "y": 330,
+        "wires": []
+    },
+    {
+        "id": "7929da12.b60ec4",
+        "type": "comment",
+        "z": "7b0b5d6c.6db264",
+        "name": "Initial deployment",
+        "info": "Upon starting up, this part preps the flow with\na single injection. It will read and execute the \ninstructions in di1100.txt before stopping the flow \nand awaiting the initialization injection (from the\n\"start\" node).",
+        "x": 380,
+        "y": 330,
+        "wires": []
+    },
+    {
+        "id": "d63e5682.fefab8",
+        "type": "comment",
+        "z": "7b0b5d6c.6db264",
+        "name": "Start recording",
+        "info": "This injection node starts the recording process for \nthe connected DATAQ product, tracking voltage and\nwriting the values into multiple csv files in two \nplaces, a location on the PC and a specified online\ncloud drive compatible with rclone.\n\nThe linked \"add cr\" function node sets up the defined \nglobal fields, changing the flag to \"1\" and naming\nthe csv file to created in the defined addresses.",
+        "x": 260,
+        "y": 520,
+        "wires": []
+    },
+    {
+        "id": "fdf95c7c.e3702",
+        "type": "comment",
+        "z": "7b0b5d6c.6db264",
+        "name": "Direction of data",
+        "info": "This node determines where the flow of data from the \nDATAQ product will be directed to. The first output\nis exclusively for the instructions. The second \noutput is for active recording state: It will send \ndata to Dashboard UI and the storage location on\nthe PC simultaneously.\n\nThe third output is for the changing of addresses and\ncloning of the PC destination's repository to the\ncloud drive repository. It stops the recording to \nprepare the recording to a new csv file.",
+        "x": 450,
+        "y": 720,
+        "wires": []
+    },
+    {
+        "id": "47ed70da.e0406",
+        "type": "comment",
+        "z": "7b0b5d6c.6db264",
+        "name": "Extra (Not a major component)",
+        "info": "Provides an active line chart based off a loaded data\nset. It has nothing to do with the recording function\nof the flow, but it can be viewed under the DATAQ\nChart tab in the dashboard.",
+        "x": 490,
+        "y": 1230,
+        "wires": []
+    },
+    {
+        "id": "56bd9aac.bd9f04",
+        "type": "comment",
+        "z": "7b0b5d6c.6db264",
+        "name": "Total file size count",
+        "info": "The text output displays an approximation of the total\namount of data that has been output in terms of bytes.\nNote that this is not meant to represent an accurate\nmeasurement of the actual file size. Check the \ndestination folder on your PC for a more accurate\none.",
+        "x": 1709,
+        "y": 270,
+        "wires": []
+    },
+    {
+        "id": "c7c3fbb7.76bb68",
+        "type": "comment",
+        "z": "7b0b5d6c.6db264",
+        "name": "Split measurements into eight",
+        "info": "The maximum number of channels that can be set is 8,\nand it is assumed that all eight are used during \nrecording in order to properly split the sets\nof measurements into individual parameters that are\nsent to each individual guage on the UI dashboard.",
+        "x": 1450,
+        "y": 960,
+        "wires": []
+    },
+    {
+        "id": "d97b33b5.ee76a",
+        "type": "serial-port",
+        "z": "7b0b5d6c.6db264",
+        "serialport": "/dev/ttyACM0",
+        "serialbaud": "57600",
+        "databits": "8",
+        "parity": "none",
+        "stopbits": "1",
+        "newline": "50",
+        "bin": "false",
+        "out": "time",
+        "addchar": false
+    },
+    {
+        "id": "1b6ceb55.d7c1f5",
+        "type": "ui_group",
+        "z": "",
+        "name": "Home",
+        "tab": "8e7686b9.c5f128",
+        "disp": true,
+        "width": "8",
+        "collapse": false
+    },
+    {
+        "id": "4c9fb256.55a25c",
+        "type": "ui_group",
+        "z": "",
+        "name": "Scrolling Chart",
+        "tab": "685db33d.edf38c",
+        "order": 1,
+        "disp": true,
+        "width": "8"
+    },
+    {
+        "id": "61e72a8.8237ed4",
+        "type": "ui_group",
+        "z": "",
+        "name": "DAQ_UI_1",
+        "tab": "27bc751.4d5628a",
+        "disp": false,
+        "width": "10",
+        "collapse": false
+    },
+    {
+        "id": "6044a4b9.1ad5ec",
+        "type": "ui_group",
+        "z": "",
+        "name": "DAQ_UI_2",
+        "tab": "58609973.a4ce38",
+        "order": 1,
+        "disp": true,
+        "width": "6",
+        "collapse": false
+    },
+    {
+        "id": "5d5d3e09.ed062",
+        "type": "ui_group",
+        "z": "",
+        "name": "DAQ_U_3",
+        "tab": "2e4d21b4.3ec5ae",
+        "order": 1,
+        "disp": true,
+        "width": "6",
+        "collapse": false
+    },
+    {
+        "id": "53ef105b.e11c6",
+        "type": "ui_group",
+        "z": "",
+        "name": "DAQ_UI_4",
+        "tab": "adc713b6.70138",
+        "order": 1,
+        "disp": true,
+        "width": "6",
+        "collapse": false
+    },
+    {
+        "id": "40680217.503c8c",
+        "type": "ui_group",
+        "z": "",
+        "name": "Status",
+        "tab": "8e7686b9.c5f128",
+        "order": 2,
+        "disp": true,
+        "width": "6",
+        "collapse": false
+    },
+    {
+        "id": "8e7686b9.c5f128",
+        "type": "ui_tab",
+        "z": "",
+        "name": "UI Setup",
+        "icon": "dashboard",
+        "order": 1
+    },
+    {
+        "id": "685db33d.edf38c",
+        "type": "ui_tab",
+        "z": "",
+        "name": "DATAQ Chart",
+        "icon": "dashboard",
+        "order": 6
+    },
+    {
+        "id": "27bc751.4d5628a",
+        "type": "ui_tab",
+        "z": "",
+        "name": "UI Gauge1",
+        "icon": "dashboard",
+        "order": 2
+    },
+    {
+        "id": "58609973.a4ce38",
+        "type": "ui_tab",
+        "z": "",
+        "name": "UI Guage2",
+        "icon": "dashboard",
+        "order": 3
+    },
+    {
+        "id": "2e4d21b4.3ec5ae",
+        "type": "ui_tab",
+        "z": "",
+        "name": "UI Guage3",
+        "icon": "dashboard",
+        "order": 4
+    },
+    {
+        "id": "adc713b6.70138",
+        "type": "ui_tab",
+        "z": "",
+        "name": "UI Guage4",
+        "icon": "dashboard",
+        "order": 5
+    }
+]
