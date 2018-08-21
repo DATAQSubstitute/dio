@@ -1,10 +1,10 @@
 
-##**DATAQSubsitute/dio**
+# **DATAQSubsitute/dio**
 
 "dio" is a repository that consists of prototype Python scripts intended and Javascript-based Node-red flows to work in tandem with the products
 developed by DATAQ.
 
-###**_PYTHON SCRIPTS_**
+## **_PYTHON SCRIPTS_**
 
 "dio_oz_test.py", which will be renamed later on, is a script that will activate the DAQ instrument Model 1110 remotely upon running. It locates the connected instrument and gives it an input/output command 10 times.
 
@@ -16,7 +16,7 @@ These scripts are also an attempt to have DATAQ instruments with other operating
 
 All scripts are located in the "python" branch.
 
-###**_NODE-RED FLOWS_**
+## **_NODE-RED FLOWS_**
 
 In the master branch is the latest version of a Node-red flow that I was working on for a DATAQ product that records changes in voltage over long periods of time. It writes those recordings to csv files in a PC location, which can also be constantly copied to a cloud drive it set as such. In addition, the readings can be displayed on gauges in the Node-red's dashboard UI.
 
