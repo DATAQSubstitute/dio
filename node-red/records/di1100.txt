@@ -1,0 +1,10 @@
+encode 1
+ms 5
+slist 0 0
+slist 1 1
+slist 2 2
+slist 3 3
+slist 4 4
+slist 5 5
+slist 6 6
+slist 7 7
