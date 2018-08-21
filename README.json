@@ -1,5 +1,6 @@
-"dio" is a repository that consists of prototype Python scripts intended to work in tandem with the products
+"dio" is a repository that consists of prototype Python scripts intended and Javascript-based Node-red flows to work in tandem with the products
 developed by DATAQ.
+
 
 "dio_oz_test.py", which will be renamed later on, is a script that will activate the DAQ instrument Model 1110 remotely upon running. It locates the connected instrument and gives it an input/output command 10 times.
 
